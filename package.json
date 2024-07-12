@@ -1,0 +1,28 @@
+{
+  "name": "tcc-match",
+  "version": "1.0.0",
+  "main": "index.js",
+  "engines": {
+    "node": "20.14.0"
+  },
+  "scripts": {
+    "dev": "nodemon --config nodemon.json src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Luiz Felipe Xavier Farias",
+  "license": "ISC",
+  "description": "Software to enable studends and teachers of UFCG to manage their paper of conclusion of course as an advisor, producer or coordinator",
+  "dependencies": {
+    "@prisma/client": "^5.16.1",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.10",
+    "nodemon": "^3.1.4",
+    "prisma": "^5.16.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  }
+}
