@@ -7,6 +7,8 @@
   },
   "scripts": {
     "dev": "nodemon --config nodemon.json src/server.ts",
+    "db-migrate-dev": "prisma migrate dev",
+    "start-dev": "prisma migrate dev && nodemon --watch src/ --exec ts-node src/main.server.ts -e ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,14 +17,19 @@
   "description": "Software to enable studends and teachers of UFCG to manage their paper of conclusion of course as an advisor, producer or coordinator",
   "dependencies": {
     "@prisma/client": "^5.16.1",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.10",
+    "eslint": "^9.7.0",
     "nodemon": "^3.1.4",
+    "prettier": "^3.3.2",
     "prisma": "^5.16.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.5.3",
+    "typescript-transform-paths": "^3.4.7"
   }
 }
