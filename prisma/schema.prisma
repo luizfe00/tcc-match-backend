@@ -21,6 +21,7 @@ model Student {
   enrollment String @unique
 
   paper Paper?
+  themes Theme[]
 }
 
 model Professor {
@@ -33,16 +34,38 @@ model Professor {
   role Role @default(TEACHER)
 
   papers Paper[]
+  themes Theme[]
+}
+
+model Theme {
+  id String @id @default(uuid())
+  label String @unique
+  studentId String?
+  professorId String?
+
+  student Student? @relation(fields: [studentId], references: [id])
+  professor Professor? @relation(fields: [professorId], references: [id])
+  papers Paper[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? 
 }
 
 model Paper {
   id String @id @default(uuid())
-  theme String
   studentId String @unique
   professorId String
+  themeId String
+  approved Boolean @default(false)
   
+  theme Theme @relation(fields: [themeId], references: [id])
   student Student @relation(fields: [studentId], references: [id])
   professor Professor @relation(fields: [professorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? 
 }
 
 enum Role {
