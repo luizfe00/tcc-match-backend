@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client';
+
 export interface Professor {
   id?: string;
   name: string;
@@ -6,9 +8,4 @@ export interface Professor {
   classes: string;
   vacancies: number;
   role: Role;
-}
-
-export enum Role {
-  TEACHER,
-  COODINATOR,
 }
