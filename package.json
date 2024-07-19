@@ -17,6 +17,7 @@
   "description": "Software to enable studends and teachers of UFCG to manage their paper of conclusion of course as an advisor, producer or coordinator",
   "dependencies": {
     "@prisma/client": "^5.16.1",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "joi": "^17.13.3"
