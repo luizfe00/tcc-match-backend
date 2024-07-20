@@ -22,6 +22,8 @@ model Student {
 
   paper Paper?
   themes Theme[]
+
+  Interest Interest[]
 }
 
 model Professor {
@@ -35,6 +37,7 @@ model Professor {
 
   papers Paper[]
   themes Theme[]
+  interests Interest[]
 }
 
 model Theme {
@@ -47,10 +50,26 @@ model Theme {
   student Student? @relation(fields: [studentId], references: [id])
   professor Professor? @relation(fields: [professorId], references: [id])
   papers Paper[]
+  interests Interest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime? 
+}
+
+model Interest {
+  id String @id @default(uuid())
+  text String
+
+  themeId String
+  studentId String?
+  professorId String?
+
+  theme Theme @relation(fields: [themeId], references: [id])
+  student Student? @relation(fields: [studentId], references: [id])
+  professor Professor? @relation(fields: [professorId], references: [id])
+
+  createdAt DateTime @default(now())
 }
 
 model Paper {
@@ -63,10 +82,22 @@ model Paper {
   theme Theme @relation(fields: [themeId], references: [id])
   student Student @relation(fields: [studentId], references: [id])
   professor Professor @relation(fields: [professorId], references: [id])
+  stages Stage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime? 
+}
+
+model Stage {
+  id String @id @default(uuid())
+  label String
+
+  paperId String 
+  paper Paper @relation(fields: [paperId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {

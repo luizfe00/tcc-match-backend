@@ -85,4 +85,38 @@ export class PrismaThemeRepository implements ThemeRepository {
   async list(): Promise<Theme[]> {
     return await prismaClient.theme.findMany();
   }
+
+  async listAllProfessors(): Promise<Theme[]> {
+    return await prismaClient.theme.findMany({
+      where: {
+        professorId: {
+          not: null,
+        },
+      },
+      include: {
+        professor: {
+          select: {
+            email: true,
+            id: true,
+            name: true,
+            vacancies: true,
+          },
+        },
+      },
+    });
+  }
+
+  async listAllStudents(): Promise<Theme[]> {
+    return await prismaClient.theme.findMany({
+      where: {
+        studentId: {
+          not: null,
+        },
+      },
+      include: {
+        student: true,
+        papers: true,
+      },
+    });
+  }
 }
