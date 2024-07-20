@@ -8,8 +8,7 @@ export class CreateProfessor implements UseCase {
 
   async perform(professor: Professor): Promise<Professor> {
     const existingProfessor = await this.professorRepository.findByEnrollment(professor.enrollment);
-    if (existingProfessor)
-      throw new ExistingEntityError('Student', 'enrollment number', professor.enrollment);
+    if (existingProfessor) return existingProfessor;
 
     return await this.professorRepository.add(professor);
   }

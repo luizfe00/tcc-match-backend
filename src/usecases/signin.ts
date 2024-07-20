@@ -8,6 +8,8 @@ import { ProfessorRepository } from './ports/professor-repository';
 import { CreateStudent } from './create-student';
 import { CreateProfessor } from './create-professor';
 import { Role } from '@prisma/client';
+import jwt from 'jsonwebtoken';
+import { SystemRoles } from '@/constants/Roles';
 
 type TokenizedResponse = ({ token: string } & Student) | ({ token: string } & Professor);
 type SignInResponse = Promise<TokenizedResponse>;
@@ -31,7 +33,14 @@ export class SignIn implements UseCase {
         name: profile.name,
       };
       const createdStudent = await createStudent.perform(student);
-      return { ...createdStudent, token };
+      const tokenPayload = {
+        ...student,
+        id: createdStudent.id,
+        eureka_token: token,
+        role: SystemRoles.STUDENT,
+      };
+      const signInToken = jwt.sign(tokenPayload, 'secret');
+      return { ...createdStudent, token: signInToken };
     } else {
       const createProfessor = new CreateProfessor(this.professorRepository);
       const professor: Professor = {
@@ -43,7 +52,14 @@ export class SignIn implements UseCase {
         vacancies: 0,
       };
       const createdProfessor = await createProfessor.perform(professor);
-      return { ...createdProfessor, token };
+      const tokenPayload = {
+        ...professor,
+        id: createdProfessor.id,
+        eureka_token: token,
+        role: SystemRoles.TEACHER,
+      };
+      const signInToken = jwt.sign(tokenPayload, 'secret');
+      return { ...createdProfessor, token: signInToken };
     }
   }
 }

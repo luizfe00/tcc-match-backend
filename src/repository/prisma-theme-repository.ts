@@ -8,11 +8,21 @@ export class PrismaThemeRepository implements ThemeRepository {
     return await prismaClient.theme.create({
       data: {
         label: theme.label,
+        keepActive: theme?.keepActive,
         ...{
           ...(role === SystemRoles.STUDENT
             ? { student: { connect: { id: theme.studentId } } }
             : { professor: { connect: { id: theme.professorId } } }),
         },
+      },
+    });
+  }
+
+  async softDelete(id: string): Promise<void> {
+    await prismaClient.theme.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
       },
     });
   }
@@ -30,6 +40,7 @@ export class PrismaThemeRepository implements ThemeRepository {
       where: { id },
       data: {
         label: theme.label,
+        keepActive: theme?.keepActive,
       },
     });
   }
@@ -40,7 +51,18 @@ export class PrismaThemeRepository implements ThemeRepository {
     });
   }
 
-  async findByUser(userId: string, role: SystemRole): Promise<Theme[]> {
+  async findByUser(userId: string, role: SystemRole, label: string): Promise<Theme | undefined> {
+    return await prismaClient.theme.findUnique({
+      where: {
+        ...{
+          ...(role === SystemRoles.STUDENT ? { studentId: userId } : { professorId: userId }),
+          label,
+        },
+      },
+    });
+  }
+
+  async findAllByUser(userId: string, role: SystemRole): Promise<Theme[]> {
     return await prismaClient.theme.findMany({
       where: {
         ...{
