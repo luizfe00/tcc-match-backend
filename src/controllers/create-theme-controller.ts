@@ -1,16 +1,19 @@
 import { UseCase } from '@/usecases/ports/use-case';
 import { Controller, HttpRequest, HttpResponse } from './ports';
+import { CreateTheme } from '@/usecases/create-theme';
+import { Theme } from '@/models/theme';
 import { StatusCodes } from '@/constants/SatusCode';
 import { RequestErrorNames } from '@/constants/Errors';
 
-export class CreateProfessorController implements Controller {
-  constructor(private readonly useCase: UseCase) {}
+export class CreateThemeController implements Controller {
+  constructor(private readonly useCase: CreateTheme) {}
 
-  async handle(request: HttpRequest): Promise<HttpResponse> {
+  async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const student = await this.useCase.perform(request.body, request.token);
+      const themePayload = HttpRequest.body as Theme;
+      const theme = await this.useCase.perform(themePayload, HttpRequest.token);
       return {
-        body: student,
+        body: theme,
         statusCode: StatusCodes.CREATED,
       };
     } catch (error) {

@@ -3,8 +3,9 @@ import { Request, Response } from 'express';
 
 export function adaptRoute(controller: Controller) {
   return async (req: Request, res: Response) => {
+    const formatedToken = req.headers.authorization?.split('Bearer ')?.[1];
     const httpRequest: HttpRequest = {
-      token: req.headers.authorization,
+      token: formatedToken,
       body: req.body,
       params: req.params,
     };
