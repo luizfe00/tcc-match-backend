@@ -44,7 +44,6 @@ export class SignIn implements UseCase {
     } else {
       const createProfessor = new CreateProfessor(this.professorRepository);
       const professor: Professor = {
-        classes: '',
         email: profile.attributes.email,
         enrollment: profile.id,
         name: profile.name,

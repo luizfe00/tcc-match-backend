@@ -5,7 +5,6 @@ export interface Professor {
   name: string;
   email: string;
   enrollment: string;
-  classes: string;
   vacancies: number;
   role: Role;
 }

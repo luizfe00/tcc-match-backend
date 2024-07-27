@@ -19,11 +19,13 @@ model Student {
   name String
   email String @unique
   enrollment String @unique
+  interestId String? @unique
 
-  paper Paper?
+  paperProposition PTCC?
+  paper TCC?
   themes Theme[]
 
-  Interest Interest[]
+  Interest Interest? @relation(fields: [interestId], references: [id])
 }
 
 model Professor {
@@ -31,11 +33,11 @@ model Professor {
   name String
   email String @unique
   enrollment String @unique
-  classes String
   vacancies Int
   role Role @default(TEACHER)
 
-  papers Paper[]
+  paperPropositions PTCC[]
+  papers TCC[]
   themes Theme[]
   interests Interest[]
 }
@@ -43,13 +45,16 @@ model Professor {
 model Theme {
   id String @id @default(uuid())
   label String @unique
-  keepActive Boolean? @default(false)
+  summary String
+  duration Int
+
   studentId String?
   professorId String?
 
   student Student? @relation(fields: [studentId], references: [id])
   professor Professor? @relation(fields: [professorId], references: [id])
-  papers Paper[]
+  paperProposition TCC?
+  paper PTCC?
   interests Interest[]
 
   createdAt DateTime @default(now())
@@ -61,28 +66,55 @@ model Interest {
   id String @id @default(uuid())
   text String
 
+  studentId String? @unique
   themeId String
-  studentId String?
   professorId String?
 
+  student Student?
   theme Theme @relation(fields: [themeId], references: [id])
-  student Student? @relation(fields: [studentId], references: [id])
   professor Professor? @relation(fields: [professorId], references: [id])
 
   createdAt DateTime @default(now())
 }
 
-model Paper {
+model PTCC {
   id String @id @default(uuid())
-  studentId String @unique
-  professorId String
-  themeId String
+  documentUrl String
   approved Boolean @default(false)
+
+  studentId String @unique
+  themeId String @unique
+  professorId String
   
   theme Theme @relation(fields: [themeId], references: [id])
   student Student @relation(fields: [studentId], references: [id])
   professor Professor @relation(fields: [professorId], references: [id])
   stages Stage[]
+
+  startDate DateTime
+  endDate DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? 
+}
+
+model TCC {
+  id String @id @default(uuid())
+  documentUrl String
+  approved Boolean
+
+  studentId String @unique
+  themeId String @unique
+  professorId String
+
+  theme Theme @relation(fields: [themeId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+  professor Professor @relation(fields: [professorId], references: [id])
+  stages Stage[]
+
+  startDate DateTime
+  endDate DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,9 +125,12 @@ model Stage {
   id String @id @default(uuid())
   label String
 
-  paperId String 
-  paper Paper @relation(fields: [paperId], references: [id])
-
+  paperPropositionId String 
+  paperId String?
+  
+  paperProposition PTCC @relation(fields: [paperPropositionId], references: [id])
+  paper TCC? @relation(fields: [paperId], references: [id])
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
