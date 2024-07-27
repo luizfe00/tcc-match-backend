@@ -8,7 +8,8 @@ export class PrismaThemeRepository implements ThemeRepository {
     return await prismaClient.theme.create({
       data: {
         label: theme.label,
-        keepActive: theme?.keepActive,
+        duration: theme.duration,
+        summary: theme.summary,
         ...{
           ...(role === SystemRoles.STUDENT
             ? { student: { connect: { id: theme.studentId } } }
@@ -40,7 +41,8 @@ export class PrismaThemeRepository implements ThemeRepository {
       where: { id },
       data: {
         label: theme.label,
-        keepActive: theme?.keepActive,
+        duration: theme.duration,
+        summary: theme.summary,
       },
     });
   }
@@ -115,7 +117,8 @@ export class PrismaThemeRepository implements ThemeRepository {
       },
       include: {
         student: true,
-        papers: true,
+        paperProposition: true,
+        paper: true,
       },
     });
   }

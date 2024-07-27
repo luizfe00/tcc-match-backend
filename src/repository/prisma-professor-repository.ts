@@ -9,7 +9,6 @@ export class PrismaProfessorRepository implements ProfessorRepository {
         name: professor.name,
         email: professor.email,
         enrollment: professor.enrollment,
-        classes: professor.classes,
         vacancies: professor.vacancies,
       },
     });
