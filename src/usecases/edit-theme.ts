@@ -16,6 +16,6 @@ export class EditTheme implements UseCase {
     const themeUserRole = user.role === SystemRoles.STUDENT ? 'studentId' : 'professorId';
     const themeBelongsToUser = themeEntity[themeUserRole] === user.id;
     if (!themeBelongsToUser) throw new BadRequestError('User not allowed to edit this instance');
-    await this.themeRepository.edit(theme.id, { keepActive: theme.keepActive, label: theme.label });
+    await this.themeRepository.edit(theme.id, theme);
   }
 }

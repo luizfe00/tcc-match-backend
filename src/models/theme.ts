@@ -1,7 +1,8 @@
 export interface Theme {
   id?: string;
   label: string;
-  keepActive?: boolean;
+  summary: string;
+  duration: number;
   studentId?: string;
   professorId?: string;
 }
