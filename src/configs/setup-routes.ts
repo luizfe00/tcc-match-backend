@@ -1,7 +1,6 @@
 import { adaptValidator } from '@/adapters/express-validator-adapter';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
-// import { makeCreateProfessorController } from '@/factories/controllers/make-create-professor-controller';
 import { makeCreateThemeController } from '@/factories/controllers/make-create-theme-controller';
 import { makeDeleteInterestController } from '@/factories/controllers/make-delete-interest-controller';
 import { makeDeleteThemeController } from '@/factories/controllers/make-delete-theme-controller';
@@ -9,6 +8,7 @@ import { makeEditThemeController } from '@/factories/controllers/make-edit-theme
 import { makeListStudentThemesController } from '@/factories/controllers/make-list-student-themes-controller';
 import { makeListInterestController } from '@/factories/controllers/make-list-theme-interest-controller';
 import { makeListUserInterestController } from '@/factories/controllers/make-list-user-interest-controller';
+import { makeListUserThemesController } from '@/factories/controllers/make-list-user-themes-controller';
 import { makeSignInController } from '@/factories/controllers/make-signin-controller';
 import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
@@ -31,6 +31,7 @@ export function setupRoutes(app: Express): void {
   listUserInterest(router);
   listThemeInterest(router);
   approveInterest(router);
+  listUserThemesRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -67,6 +68,14 @@ function listStudenThemesRoute(router: Router) {
     '/theme/student',
     adaptValidator(createAuthenticationValidator()),
     adaptRoute(makeListStudentThemesController())
+  );
+}
+
+function listUserThemesRoute(router: Router) {
+  router.get(
+    '/theme',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListUserThemesController())
   );
 }
 
