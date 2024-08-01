@@ -1,7 +1,7 @@
 import { adaptValidator } from '@/adapters/express-validator-adapter';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
-import { makeCreateProfessorController } from '@/factories/controllers/make-create-professor-controller';
+// import { makeCreateProfessorController } from '@/factories/controllers/make-create-professor-controller';
 import { makeCreateThemeController } from '@/factories/controllers/make-create-theme-controller';
 import { makeDeleteInterestController } from '@/factories/controllers/make-delete-interest-controller';
 import { makeDeleteThemeController } from '@/factories/controllers/make-delete-theme-controller';
@@ -27,7 +27,6 @@ export function setupRoutes(app: Express): void {
   deleteThemeRoute(router);
   listStudenThemesRoute(router);
   createInterest(router);
-  createProfesso(router);
   deleteInterest(router);
   listUserInterest(router);
   listThemeInterest(router);
@@ -78,10 +77,6 @@ function createInterest(router: Router) {
     adaptValidator(makeCreateInterestValidator()),
     adaptRoute(makeCreateInterestController())
   );
-}
-
-function createProfesso(router: Router) {
-  router.post('/professor', adaptRoute(makeCreateProfessorController()));
 }
 
 function deleteInterest(router: Router) {

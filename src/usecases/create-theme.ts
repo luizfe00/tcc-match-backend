@@ -1,29 +1,35 @@
-import { Theme } from '@/models/theme';
+import { decode } from 'jsonwebtoken';
+import { Role } from '@prisma/client';
+
+import { Theme, ThemePayload } from '@/models/theme';
 import { ThemeRepository } from './ports/theme-repository';
 import { UseCase } from './ports/use-case';
-import { decode } from 'jsonwebtoken';
-import { User } from '@/interfaces/user';
-import { ExistingEntityError } from './errors';
-import { SystemRoles } from '@/constants/Roles';
+import { BadRequestError, ExistingEntityError } from './errors';
+import { UserSignIn } from '@/interfaces/user';
 
 export class CreateTheme implements UseCase {
   constructor(private readonly themeRepository: ThemeRepository) {}
 
-  async perform(theme: Theme, token: string): Promise<Theme> {
-    // Get user from token, check if it already has a theme like this one, if it does than throw error, if not, create
-    const user = decode(token) as User;
+  async perform(theme: ThemePayload, token: string): Promise<Theme> {
+    const user = decode(token) as UserSignIn;
 
     return this.createTheme(theme, user);
   }
 
-  private async createTheme(theme: Theme, user: User) {
-    const existingTheme = await this.themeRepository.findByUser(user.id, user.role, theme.label);
-    if (existingTheme) {
+  private async createTheme(theme: ThemePayload, user: UserSignIn) {
+    const userThemes = await this.themeRepository.findAllByUser(user.id);
+    if (userThemes.length && user.role === Role.STUDENT) {
+      throw new BadRequestError('Student can only have one theme created at a time');
+    }
+
+    const themeFound = await this.themeRepository.findByUser(user.id, theme.label);
+
+    if (themeFound) {
       throw new ExistingEntityError('Theme', 'label', theme.label);
     }
 
-    theme[user.role === SystemRoles.STUDENT ? 'studentId' : 'professorId'] = user.id;
+    theme.ownerId = user.id;
 
-    return await this.themeRepository.add(theme, user.role);
+    return await this.themeRepository.add(theme);
   }
 }

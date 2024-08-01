@@ -1,19 +1,19 @@
 import { Theme } from '@/models/theme';
 import { ThemeRepository } from '@/usecases/ports/theme-repository';
 import prismaClient from './prisma-client';
-import { SystemRole, SystemRoles } from '@/constants/Roles';
+import { Role } from '@prisma/client';
 
 export class PrismaThemeRepository implements ThemeRepository {
-  async add(theme: Theme, role: SystemRole): Promise<Theme> {
+  async add(theme: Theme): Promise<Theme> {
     return await prismaClient.theme.create({
       data: {
         label: theme.label,
         duration: theme.duration,
         summary: theme.summary,
-        ...{
-          ...(role === SystemRoles.STUDENT
-            ? { student: { connect: { id: theme.studentId } } }
-            : { professor: { connect: { id: theme.professorId } } }),
+        owner: {
+          connect: {
+            id: theme.ownerId,
+          },
         },
       },
     });
@@ -53,23 +53,19 @@ export class PrismaThemeRepository implements ThemeRepository {
     });
   }
 
-  async findByUser(userId: string, role: SystemRole, label: string): Promise<Theme | undefined> {
+  async findByUser(userId: string, label: string): Promise<Theme | undefined> {
     return await prismaClient.theme.findUnique({
       where: {
-        ...{
-          ...(role === SystemRoles.STUDENT ? { studentId: userId } : { professorId: userId }),
-          label,
-        },
+        ownerId: userId,
+        label,
       },
     });
   }
 
-  async findAllByUser(userId: string, role: SystemRole): Promise<Theme[]> {
+  async findAllByUser(userId: string): Promise<Theme[]> {
     return await prismaClient.theme.findMany({
       where: {
-        ...{
-          ...(role === SystemRoles.STUDENT ? { studentId: userId } : { professorId: userId }),
-        },
+        ownerId: userId,
       },
     });
   }
@@ -91,19 +87,18 @@ export class PrismaThemeRepository implements ThemeRepository {
   async listAllProfessors(): Promise<Theme[]> {
     return await prismaClient.theme.findMany({
       where: {
-        professorId: {
-          not: null,
+        owner: {
+          NOT: [
+            {
+              role: Role.STUDENT,
+            },
+          ],
         },
       },
       include: {
-        professor: {
-          select: {
-            email: true,
-            id: true,
-            name: true,
-            vacancies: true,
-          },
-        },
+        owner: true,
+        interests: true,
+        paper: true,
       },
     });
   }
@@ -111,13 +106,13 @@ export class PrismaThemeRepository implements ThemeRepository {
   async listAllStudents(): Promise<Theme[]> {
     return await prismaClient.theme.findMany({
       where: {
-        studentId: {
-          not: null,
+        owner: {
+          role: Role.STUDENT,
         },
       },
       include: {
-        student: true,
-        paperProposition: true,
+        owner: true,
+        interests: true,
         paper: true,
       },
     });

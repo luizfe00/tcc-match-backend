@@ -1,13 +1,11 @@
 import { Controller } from '@/controllers/ports';
-import { makeStudentRepository } from '../repository/make-student-repository';
-import { makeProfessorRepository } from '../repository/make-professor-repository';
 import { SignIn } from '@/usecases/signin';
 import { SignInController } from '@/controllers/sigin-in-controller';
+import { makeUserRepository } from '../repository/make-user-repository';
 
 export const makeSignInController = (): Controller => {
-  const studentRepository = makeStudentRepository();
-  const professorRepository = makeProfessorRepository();
-  const useCase = new SignIn(studentRepository, professorRepository);
+  const userRepository = makeUserRepository();
+  const useCase = new SignIn(userRepository);
   const signInController = new SignInController(useCase);
   return signInController;
 };

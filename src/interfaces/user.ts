@@ -1,9 +1,9 @@
-import { SystemRole } from '@/constants/Roles';
+import { Role } from '@prisma/client';
 
-export interface User {
+export interface UserSignIn {
   id: string;
   name: string;
   email: string;
   enrollment: string;
-  role?: SystemRole;
+  role: Role;
 }

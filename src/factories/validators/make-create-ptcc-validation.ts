@@ -1,10 +1,10 @@
 import Joi from 'joi';
 import { Validator } from './validator';
-import { PTCC } from '@/models/ptcc';
 import { PayloadValidation } from '@/usecases/validations/payload';
+import { PaperPayload } from '@/models/paper';
 
 export const makeCreatePTCCValidator = (): Validator => {
-  const joiSchema = Joi.object<PTCC>({
+  const joiSchema = Joi.object<PaperPayload>({
     documentUrl: Joi.string().default(''),
     professorId: Joi.string().uuid().required(),
     studentId: Joi.string().uuid().required(),
