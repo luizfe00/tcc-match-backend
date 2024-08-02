@@ -67,6 +67,15 @@ export class PrismaThemeRepository implements ThemeRepository {
       where: {
         ownerId: userId,
       },
+      include: {
+        interests: {
+          include: {
+            owner: true,
+          },
+        },
+        paper: true,
+        owner: true,
+      },
     });
   }
 

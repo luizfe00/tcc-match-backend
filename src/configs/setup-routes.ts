@@ -5,6 +5,8 @@ import { makeCreateThemeController } from '@/factories/controllers/make-create-t
 import { makeDeleteInterestController } from '@/factories/controllers/make-delete-interest-controller';
 import { makeDeleteThemeController } from '@/factories/controllers/make-delete-theme-controller';
 import { makeEditThemeController } from '@/factories/controllers/make-edit-theme-controller';
+import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
+import { makeListProfessorThemesController } from '@/factories/controllers/make-list-professor-themes-controller';
 import { makeListStudentThemesController } from '@/factories/controllers/make-list-student-themes-controller';
 import { makeListInterestController } from '@/factories/controllers/make-list-theme-interest-controller';
 import { makeListUserInterestController } from '@/factories/controllers/make-list-user-interest-controller';
@@ -22,10 +24,12 @@ export function setupRoutes(app: Express): void {
   app.use('/api', router);
 
   createSignInRoute(router);
+  getUserRoute(router);
   createThemeRoute(router);
   editThemeRoute(router);
   deleteThemeRoute(router);
   listStudenThemesRoute(router);
+  listProfessorThemesRoute(router);
   createInterest(router);
   deleteInterest(router);
   listUserInterest(router);
@@ -36,6 +40,14 @@ export function setupRoutes(app: Express): void {
 
 function createSignInRoute(router: Router) {
   router.post('/signin', adaptRoute(makeSignInController()));
+}
+
+function getUserRoute(router: Router) {
+  router.get(
+    '/me',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeGetUserController())
+  );
 }
 
 function createThemeRoute(router: Router) {
@@ -76,6 +88,14 @@ function listUserThemesRoute(router: Router) {
     '/theme',
     adaptValidator(createAuthenticationValidator()),
     adaptRoute(makeListUserThemesController())
+  );
+}
+
+function listProfessorThemesRoute(router: Router) {
+  router.get(
+    '/theme/professor',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListProfessorThemesController())
   );
 }
 
