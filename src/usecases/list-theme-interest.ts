@@ -1,11 +1,11 @@
+import { decode } from 'jsonwebtoken';
+
 import { Interest } from '@/models/interest';
 import { InterestRepository } from './ports/interest-repository';
 import { UseCase } from './ports/use-case';
-import { decode } from 'jsonwebtoken';
-import { User } from '@/interfaces/user';
 import { ThemeRepository } from './ports/theme-repository';
 import { BadRequestError, NotFoundError } from './errors';
-import { SystemRoles } from '@/constants/Roles';
+import { UserSignIn } from '@/interfaces/user';
 
 export class ListThemeInterests implements UseCase {
   constructor(
@@ -14,13 +14,12 @@ export class ListThemeInterests implements UseCase {
   ) {}
 
   async perform(id?: string, token?: string): Promise<Interest[]> {
-    const user = decode(token) as User;
+    const user = decode(token) as UserSignIn;
     const theme = await this.themeRepository.findById(id);
     if (!theme) {
       throw new NotFoundError('Theme', id);
     }
-    const searchTerm = user.role === SystemRoles.STUDENT ? 'studentId' : 'professorId';
-    const belongsToUser = theme[searchTerm] === user.id;
+    const belongsToUser = theme.ownerId === user.id;
     if (!belongsToUser) {
       throw new BadRequestError('Action not allowed for user');
     }

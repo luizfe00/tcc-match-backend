@@ -1,16 +1,16 @@
-import { SystemRole } from '@/constants/Roles';
-import { Theme } from '@/models/theme';
+import { Theme, ThemePayload } from '@/models/theme';
+import { Role } from '@prisma/client';
 
 export interface ThemeRepository {
-  add(theme: Theme, role: SystemRole): Promise<Theme>;
+  add(theme: ThemePayload): Promise<Theme>;
   edit(id: string, theme: Partial<Theme>): Promise<void>;
   softDelete(id: string): Promise<void>;
   delete(id: string): Promise<void>;
 
   findBylabel(label: string): Promise<Theme[]>;
   findById(id: string): Promise<Theme | undefined>;
-  findByUser(userId: string, role: SystemRole, label: string): Promise<Theme | undefined>;
-  findAllByUser(userId: string, role: SystemRole): Promise<Theme[]>;
+  findByUser(userId: string, label: string): Promise<Theme | undefined>;
+  findAllByUser(userId: string): Promise<Theme[]>;
 
   list(): Promise<Theme[]>;
   listAllStudents(): Promise<Theme[]>;

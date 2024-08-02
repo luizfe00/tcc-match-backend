@@ -13,31 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model Student {
+model User {
   id String @id @default(uuid())
   name String
   email String @unique
   enrollment String @unique
-  interestId String? @unique
+  vacancies Int?
+  role Role
 
-  paperProposition PTCC?
-  paper TCC?
-  themes Theme[]
-
-  Interest Interest? @relation(fields: [interestId], references: [id])
-}
-
-model Professor {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  enrollment String @unique
-  vacancies Int
-  role Role @default(TEACHER)
-
-  paperPropositions PTCC[]
-  papers TCC[]
+  papers Paper[]
+  orienteePaper Paper? @relation(name: "orientee_paper")
   themes Theme[]
   interests Interest[]
 }
@@ -47,15 +32,11 @@ model Theme {
   label String @unique
   summary String
   duration Int
+  ownerId String
 
-  studentId String?
-  professorId String?
-
-  student Student? @relation(fields: [studentId], references: [id])
-  professor Professor? @relation(fields: [professorId], references: [id])
-  paperProposition TCC?
-  paper PTCC?
+  paper Paper?
   interests Interest[]
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,52 +46,29 @@ model Theme {
 model Interest {
   id String @id @default(uuid())
   text String
-
-  studentId String? @unique
+  ownerId String
   themeId String
-  professorId String?
 
-  student Student?
   theme Theme @relation(fields: [themeId], references: [id])
-  professor Professor? @relation(fields: [professorId], references: [id])
-
-  createdAt DateTime @default(now())
-}
-
-model PTCC {
-  id String @id @default(uuid())
-  documentUrl String
-  approved Boolean @default(false)
-
-  studentId String @unique
-  themeId String @unique
-  professorId String
-  
-  theme Theme @relation(fields: [themeId], references: [id])
-  student Student @relation(fields: [studentId], references: [id])
-  professor Professor @relation(fields: [professorId], references: [id])
-  stages Stage[]
-
-  startDate DateTime
-  endDate DateTime
+  owner User @relation(fields: [ownerId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  deletedAt DateTime? 
 }
 
-model TCC {
+model Paper {
   id String @id @default(uuid())
-  documentUrl String
-  approved Boolean
+  documentUrl String?
+  approved Boolean @default(false)
+  type PaperType @default(PTCC)
 
   studentId String @unique
-  themeId String @unique
   professorId String
-
-  theme Theme @relation(fields: [themeId], references: [id])
-  student Student @relation(fields: [studentId], references: [id])
-  professor Professor @relation(fields: [professorId], references: [id])
+  themeId String @unique
+  
+  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  orientee User @relation(fields: [studentId], references: [id], onDelete: Cascade, name: "orientee_paper")
+  advisor User @relation(fields: [professorId], references: [id], onDelete: Cascade)
   stages Stage[]
 
   startDate DateTime
@@ -124,18 +82,21 @@ model TCC {
 model Stage {
   id String @id @default(uuid())
   label String
-
-  paperPropositionId String 
-  paperId String?
+  paperId String 
   
-  paperProposition PTCC @relation(fields: [paperPropositionId], references: [id])
-  paper TCC? @relation(fields: [paperId], references: [id])
+  paper Paper @relation(fields: [paperId], references: [id])
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 enum Role {
+  STUDENT
   TEACHER
   COORDINATOR
+}
+
+enum PaperType {
+  PTCC
+  TCC
 }

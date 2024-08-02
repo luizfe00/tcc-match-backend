@@ -1,14 +1,16 @@
 import { adaptValidator } from '@/adapters/express-validator-adapter';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
-import { makeCreateProfessorController } from '@/factories/controllers/make-create-professor-controller';
 import { makeCreateThemeController } from '@/factories/controllers/make-create-theme-controller';
 import { makeDeleteInterestController } from '@/factories/controllers/make-delete-interest-controller';
 import { makeDeleteThemeController } from '@/factories/controllers/make-delete-theme-controller';
 import { makeEditThemeController } from '@/factories/controllers/make-edit-theme-controller';
+import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
+import { makeListProfessorThemesController } from '@/factories/controllers/make-list-professor-themes-controller';
 import { makeListStudentThemesController } from '@/factories/controllers/make-list-student-themes-controller';
 import { makeListInterestController } from '@/factories/controllers/make-list-theme-interest-controller';
 import { makeListUserInterestController } from '@/factories/controllers/make-list-user-interest-controller';
+import { makeListUserThemesController } from '@/factories/controllers/make-list-user-themes-controller';
 import { makeSignInController } from '@/factories/controllers/make-signin-controller';
 import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
@@ -22,20 +24,30 @@ export function setupRoutes(app: Express): void {
   app.use('/api', router);
 
   createSignInRoute(router);
+  getUserRoute(router);
   createThemeRoute(router);
   editThemeRoute(router);
   deleteThemeRoute(router);
   listStudenThemesRoute(router);
+  listProfessorThemesRoute(router);
   createInterest(router);
-  createProfesso(router);
   deleteInterest(router);
   listUserInterest(router);
   listThemeInterest(router);
   approveInterest(router);
+  listUserThemesRoute(router);
 }
 
 function createSignInRoute(router: Router) {
   router.post('/signin', adaptRoute(makeSignInController()));
+}
+
+function getUserRoute(router: Router) {
+  router.get(
+    '/me',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeGetUserController())
+  );
 }
 
 function createThemeRoute(router: Router) {
@@ -71,6 +83,22 @@ function listStudenThemesRoute(router: Router) {
   );
 }
 
+function listUserThemesRoute(router: Router) {
+  router.get(
+    '/theme',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListUserThemesController())
+  );
+}
+
+function listProfessorThemesRoute(router: Router) {
+  router.get(
+    '/theme/professor',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListProfessorThemesController())
+  );
+}
+
 function createInterest(router: Router) {
   router.post(
     '/interest',
@@ -78,10 +106,6 @@ function createInterest(router: Router) {
     adaptValidator(makeCreateInterestValidator()),
     adaptRoute(makeCreateInterestController())
   );
-}
-
-function createProfesso(router: Router) {
-  router.post('/professor', adaptRoute(makeCreateProfessorController()));
 }
 
 function deleteInterest(router: Router) {

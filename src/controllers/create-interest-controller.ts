@@ -16,6 +16,7 @@ export class CreateInterestController implements Controller {
         statusCode: StatusCodes.CREATED,
       };
     } catch (error) {
+      console.log(error);
       const BadRequestError = error.constructor.name === RequestErrorNames.BAD_REQUEST;
       const ExistingEntityError = error.constructor.name === RequestErrorNames.EXISTING_ENTITY;
 
