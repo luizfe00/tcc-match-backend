@@ -7,8 +7,6 @@ export interface Paper {
   documentUrl?: string;
   approved: boolean;
   type: PaperType;
-  startDate: Date;
-  endDate: Date;
   orientee?: User;
   advisor?: User;
   theme?: Theme;
@@ -23,6 +21,5 @@ export interface PaperPayload {
   studentId: string;
   themeId: string;
   professorId: string;
-  startDate: Date;
-  endDate: Date;
+  interestId: string;
 }
