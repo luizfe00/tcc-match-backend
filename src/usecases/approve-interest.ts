@@ -6,12 +6,14 @@ import { Paper, PaperPayload } from '@/models/paper';
 import { UserSignIn } from '@/interfaces/user';
 import { PaperRepository } from './ports/paper-repository';
 import { UserRepository } from './ports/user-repository';
+import { InterestRepository } from './ports/interest-repository';
 
 export class ApproveInterest implements UseCase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly themeRepository: ThemeRepository,
-    private readonly paperRepository: PaperRepository
+    private readonly paperRepository: PaperRepository,
+    private readonly interestRepository: InterestRepository
   ) {}
 
   async perform(ptcc: PaperPayload, token: string): Promise<Paper> {
@@ -24,18 +26,19 @@ export class ApproveInterest implements UseCase {
     if (!themeBelongsToUser) {
       throw new BadRequestError('User not allowed to approve interest');
     }
-    const ptccFound = this.paperRepository.findByThemeId(ptcc.themeId);
-    if (ptccFound) {
-      throw new ExistingEntityError('PTCC', 'themeId', ptcc.themeId);
+    const paperFound = await this.paperRepository.findByThemeId(ptcc.themeId);
+    if (paperFound) {
+      throw new ExistingEntityError('Paper', 'themeId', ptcc.themeId);
     }
-    const professor = this.userRepository.getUserById(ptcc.professorId);
+    const professor = await this.userRepository.getUserById(ptcc.professorId);
     if (!professor) {
       throw new NotFoundError('Professor', ptcc.professorId);
     }
-    const student = this.userRepository.getUserById(ptcc.studentId);
+    const student = await this.userRepository.getUserById(ptcc.studentId);
     if (!student) {
       throw new NotFoundError('Student', ptcc.studentId);
     }
+    await this.interestRepository.approve(ptcc.interestId);
     return await this.paperRepository.add(ptcc);
   }
 }
