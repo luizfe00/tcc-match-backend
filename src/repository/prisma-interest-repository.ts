@@ -22,6 +22,17 @@ export class PrismaInterestRepository implements InterestRepository {
     });
   }
 
+  async approve(interestId: string): Promise<void> {
+    await prismaClient.interest.update({
+      where: {
+        id: interestId,
+      },
+      data: {
+        approved: true,
+      },
+    });
+  }
+
   async delete(id: string): Promise<void> {
     await prismaClient.interest.delete({
       where: { id },

@@ -40,9 +40,11 @@ export class PrismaThemeRepository implements ThemeRepository {
     await prismaClient.theme.update({
       where: { id },
       data: {
-        label: theme.label,
-        duration: theme.duration,
-        summary: theme.summary,
+        label: theme?.label,
+        duration: theme?.duration,
+        summary: theme?.summary,
+        startDate: theme?.startDate,
+        endDate: theme?.endDate,
       },
     });
   }

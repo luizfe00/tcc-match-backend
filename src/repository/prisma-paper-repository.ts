@@ -6,8 +6,6 @@ export class PrismaPaperRepository implements PaperRepository {
   async add(paper: PaperPayload): Promise<Paper> {
     return await prismaClient.paper.create({
       data: {
-        endDate: paper.endDate,
-        startDate: paper.startDate,
         documentUrl: paper?.documentUrl,
         theme: {
           connect: {
@@ -37,8 +35,6 @@ export class PrismaPaperRepository implements PaperRepository {
       data: {
         approved: paper?.approved,
         documentUrl: paper?.documentUrl,
-        startDate: paper?.startDate,
-        endDate: paper?.endDate,
       },
     });
   }
@@ -55,6 +51,11 @@ export class PrismaPaperRepository implements PaperRepository {
     return await prismaClient.paper.findMany({
       where: {
         OR: [{ professorId: userId }, { studentId: userId }],
+      },
+      include: {
+        advisor: true,
+        orientee: true,
+        theme: true,
       },
     });
   }

@@ -7,6 +7,8 @@ export interface Theme {
   summary: string;
   duration: number;
   ownerId: string;
+  startDate: Date;
+  endDate: Date;
   paper?: any;
   interests?: Interest[];
   owner?: User;
@@ -20,4 +22,6 @@ export interface ThemePayload {
   summary: string;
   duration: number;
   ownerId: string;
+  startDate: Date;
+  endDate: Date;
 }
