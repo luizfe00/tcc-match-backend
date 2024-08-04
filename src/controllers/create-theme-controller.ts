@@ -1,7 +1,6 @@
-import { UseCase } from '@/usecases/ports/use-case';
 import { Controller, HttpRequest, HttpResponse } from './ports';
 import { CreateTheme } from '@/usecases/create-theme';
-import { Theme, ThemePayload } from '@/models/theme';
+import { ThemePayload } from '@/models/theme';
 import { StatusCodes } from '@/constants/SatusCode';
 import { RequestErrorNames } from '@/constants/Errors';
 
@@ -17,7 +16,6 @@ export class CreateThemeController implements Controller {
         statusCode: StatusCodes.CREATED,
       };
     } catch (error) {
-      console.log(error);
       const entityNonExistent = error.constructor.name === RequestErrorNames.EXISTING_ENTITY;
       const userUnauthorized = error.constructor.name === RequestErrorNames.UNAUTHORIZED;
 

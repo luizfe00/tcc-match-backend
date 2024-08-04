@@ -3,6 +3,7 @@ import { CreateInterestPayload, Interest } from '@/models/interest';
 
 export interface InterestRepository {
   add(interest: CreateInterestPayload): Promise<Interest>;
+  approve(interestId: string): Promise<void>;
   findById(id: string): Promise<Interest>;
   findAllByUserId(id: string): Promise<Interest[]>;
   findAllByThemeId(id: string): Promise<Interest[]>;
