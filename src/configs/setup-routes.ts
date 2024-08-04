@@ -1,20 +1,24 @@
 import { adaptValidator } from '@/adapters/express-validator-adapter';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
+import { makeCreateStageController } from '@/factories/controllers/make-create-stage-controller';
 import { makeCreateThemeController } from '@/factories/controllers/make-create-theme-controller';
 import { makeDeleteInterestController } from '@/factories/controllers/make-delete-interest-controller';
 import { makeDeleteThemeController } from '@/factories/controllers/make-delete-theme-controller';
 import { makeEditThemeController } from '@/factories/controllers/make-edit-theme-controller';
 import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
+import { makeListPaperStagesController } from '@/factories/controllers/make-list-paper-stages-controller';
 import { makeListProfessorThemesController } from '@/factories/controllers/make-list-professor-themes-controller';
 import { makeListStudentThemesController } from '@/factories/controllers/make-list-student-themes-controller';
 import { makeListInterestController } from '@/factories/controllers/make-list-theme-interest-controller';
 import { makeListUserInterestController } from '@/factories/controllers/make-list-user-interest-controller';
+import { makeListUserPapersController } from '@/factories/controllers/make-list-user-papers-controller';
 import { makeListUserThemesController } from '@/factories/controllers/make-list-user-themes-controller';
 import { makeSignInController } from '@/factories/controllers/make-signin-controller';
 import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
+import { makeApproveInterestValidator } from '@/factories/validators/make-approve-interest-validation';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
-import { makeCreatePTCCValidator } from '@/factories/validators/make-create-ptcc-validation';
+import { makeCreateStageValidator } from '@/factories/validators/make-create-stage-validator';
 import { makeCreateThemeValidator } from '@/factories/validators/make-create-theme-validator';
 import { adaptRoute } from '@adapters/express-route-adapter';
 import { Router, Express } from 'express';
@@ -36,6 +40,9 @@ export function setupRoutes(app: Express): void {
   listThemeInterest(router);
   approveInterest(router);
   listUserThemesRoute(router);
+  listUserPapersRoute(router);
+  createStageRoute(router);
+  listPaperStagesRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -136,7 +143,32 @@ function approveInterest(router: Router) {
   router.post(
     '/interest/approve',
     adaptValidator(createAuthenticationValidator()),
-    adaptValidator(makeCreatePTCCValidator()),
+    adaptValidator(makeApproveInterestValidator()),
     adaptRoute(makeApproveInterestController())
+  );
+}
+
+function listUserPapersRoute(router: Router) {
+  router.get(
+    '/paper',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListUserPapersController())
+  );
+}
+
+function createStageRoute(router: Router) {
+  router.post(
+    '/stage',
+    adaptValidator(createAuthenticationValidator()),
+    adaptValidator(makeCreateStageValidator()),
+    adaptRoute(makeCreateStageController())
+  );
+}
+
+function listPaperStagesRoute(router: Router) {
+  router.get(
+    '/stage/paper/:id',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListPaperStagesController())
   );
 }
