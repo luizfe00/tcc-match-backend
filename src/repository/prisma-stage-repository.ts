@@ -1,4 +1,4 @@
-import { StagePayload, Stage } from '@/models/stage';
+import { StagePayload, Stage, UpdateStagePayload } from '@/models/stage';
 import { StageRepostiory } from '@/usecases/ports/stage-repository';
 import prismaClient from './prisma-client';
 
@@ -16,11 +16,66 @@ export class PrismaStageRepository implements StageRepostiory {
     });
   }
 
+  async update(stage: UpdateStagePayload): Promise<void> {
+    await prismaClient.stage.update({
+      where: {
+        id: stage.id,
+      },
+      data: {
+        viewed: stage?.viewed,
+        label: stage?.label,
+        feedback: stage?.feedback,
+      },
+    });
+  }
+
   async listByPaper(paperId: string): Promise<Stage[]> {
     return await prismaClient.stage.findMany({
       where: {
         paperId,
       },
+    });
+  }
+
+  async listPending(userId: string): Promise<Stage[]> {
+    return await prismaClient.stage.findMany({
+      where: {
+        AND: [
+          {
+            paper: {
+              professorId: userId,
+            },
+          },
+          {
+            OR: [{ viewed: false }, { feedback: null }],
+          },
+        ],
+      },
+      include: {
+        paper: {
+          include: {
+            theme: true,
+            orientee: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findById(id: string): Promise<Stage> {
+    return await prismaClient.stage.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        paper: true,
+      },
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await prismaClient.stage.delete({
+      where: { id },
     });
   }
 }

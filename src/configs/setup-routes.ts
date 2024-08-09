@@ -8,6 +8,7 @@ import { makeDeleteThemeController } from '@/factories/controllers/make-delete-t
 import { makeEditThemeController } from '@/factories/controllers/make-edit-theme-controller';
 import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
 import { makeListPaperStagesController } from '@/factories/controllers/make-list-paper-stages-controller';
+import { makeListPendingFeedbackController } from '@/factories/controllers/make-list-pending-feedback-controller';
 import { makeListProfessorThemesController } from '@/factories/controllers/make-list-professor-themes-controller';
 import { makeListStudentThemesController } from '@/factories/controllers/make-list-student-themes-controller';
 import { makeListInterestController } from '@/factories/controllers/make-list-theme-interest-controller';
@@ -15,6 +16,7 @@ import { makeListUserInterestController } from '@/factories/controllers/make-lis
 import { makeListUserPapersController } from '@/factories/controllers/make-list-user-papers-controller';
 import { makeListUserThemesController } from '@/factories/controllers/make-list-user-themes-controller';
 import { makeSignInController } from '@/factories/controllers/make-signin-controller';
+import { makeUpdateStageController } from '@/factories/controllers/make-update-stage-controller';
 import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
 import { makeApproveInterestValidator } from '@/factories/validators/make-approve-interest-validation';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
@@ -43,6 +45,8 @@ export function setupRoutes(app: Express): void {
   listUserPapersRoute(router);
   createStageRoute(router);
   listPaperStagesRoute(router);
+  listPendingFeedbackRoute(router);
+  updateStageRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -170,5 +174,21 @@ function listPaperStagesRoute(router: Router) {
     '/stage/paper/:id',
     adaptValidator(createAuthenticationValidator()),
     adaptRoute(makeListPaperStagesController())
+  );
+}
+
+function listPendingFeedbackRoute(router: Router) {
+  router.get(
+    '/stage/pending',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListPendingFeedbackController())
+  );
+}
+
+function updateStageRoute(router: Router) {
+  router.put(
+    '/stage/:id',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeUpdateStageController())
   );
 }

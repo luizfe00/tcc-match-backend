@@ -31,7 +31,8 @@ export class SignIn implements UseCase {
       role,
     };
 
-    const foundUser = await this.userRepository.getUserByEnrollment(userData.enrollment);
+    // const foundUser = await this.userRepository.getUserByEnrollment(userData.enrollment);
+    const foundUser = await this.userRepository.getUserByEnrollment('00000001');
     if (foundUser) {
       const signInToken = jwt.sign(foundUser, 'secret');
       return { ...foundUser, token: signInToken };

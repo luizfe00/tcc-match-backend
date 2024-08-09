@@ -85,6 +85,7 @@ model Stage {
   paperId String 
   viewed Boolean @default(false)
   feedback String?
+  message String?
 
   
   paper Paper @relation(fields: [paperId], references: [id])
