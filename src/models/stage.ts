@@ -18,3 +18,10 @@ export interface StagePayload {
   feedback?: string;
   paperId?: string;
 }
+
+export interface UpdateStagePayload {
+  id: string;
+  label?: string;
+  viewed?: boolean;
+  feedback?: string;
+}

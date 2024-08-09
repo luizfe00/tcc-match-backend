@@ -7,6 +7,8 @@ export interface Paper {
   documentUrl?: string;
   approved: boolean;
   type: PaperType;
+  studentId?: string;
+  professorId?: string;
   orientee?: User;
   advisor?: User;
   theme?: Theme;
