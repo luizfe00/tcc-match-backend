@@ -1,17 +1,18 @@
 import { PaperType } from '@prisma/client';
 import { User } from './user';
 import { Theme } from './theme';
+import { Approval } from './approval';
 
 export interface Paper {
   id?: string;
   documentUrl?: string;
-  approved: boolean;
   type: PaperType;
   studentId?: string;
   professorId?: string;
   orientee?: User;
   advisor?: User;
   theme?: Theme;
+  approvals?: Approval[];
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;

@@ -62,17 +62,18 @@ model Interest {
 model Paper {
   id String @id @default(uuid())
   documentUrl String?
-  approved Boolean @default(false)
   type PaperType @default(PTCC)
 
   studentId String @unique
   professorId String
   themeId String @unique
   
+  
   theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
   orientee User @relation(fields: [studentId], references: [id], onDelete: Cascade, name: "orientee_paper")
   advisor User @relation(fields: [professorId], references: [id], onDelete: Cascade)
   stages Stage[]
+  approvals Approval[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -90,6 +91,19 @@ model Stage {
   
   paper Paper @relation(fields: [paperId], references: [id])
   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Approval {
+  id String @id @default(uuid())
+  approval Boolean?
+  response String?
+  type PaperType @default(PTCC)
+
+  paperId String
+  paper Paper @relation(fields: [paperId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -2,6 +2,7 @@ import { Theme } from '@/models/theme';
 import { ThemeRepository } from '@/usecases/ports/theme-repository';
 import prismaClient from './prisma-client';
 import { Role } from '@prisma/client';
+import { ThemeBI } from '@/interfaces/BI';
 
 export class PrismaThemeRepository implements ThemeRepository {
   async add(theme: Theme): Promise<Theme> {
@@ -127,5 +128,47 @@ export class PrismaThemeRepository implements ThemeRepository {
         paper: true,
       },
     });
+  }
+
+  async getThemeCount(): Promise<ThemeBI> {
+    const themeData = await prismaClient.theme.findMany({
+      include: {
+        paper: true,
+        owner: true,
+      },
+    });
+
+    let themeCount = themeData.length;
+    let themeActiveCount = 0;
+    let studentActiveThemeCount = 0;
+    let professorActiveThemeCount = 0;
+    let professorThemeCount = 0;
+    let studentThemeCount = 0;
+
+    themeData.forEach((data) => {
+      if (data.paper !== null) {
+        themeActiveCount++;
+      }
+      if (data.owner.role === 'STUDENT') {
+        studentThemeCount++;
+        if (data.paper !== null) {
+          studentActiveThemeCount++;
+        }
+      } else {
+        professorThemeCount++;
+        if (data.paper !== null) {
+          professorActiveThemeCount++;
+        }
+      }
+    });
+
+    return {
+      themeCount,
+      themeActiveCount,
+      professorActiveThemeCount,
+      professorThemeCount,
+      studentActiveThemeCount,
+      studentThemeCount,
+    };
   }
 }

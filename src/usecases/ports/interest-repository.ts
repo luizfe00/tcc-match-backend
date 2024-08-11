@@ -1,3 +1,4 @@
+import { InterestBI } from '@/interfaces/BI';
 import { UserSignIn } from '@/interfaces/user';
 import { CreateInterestPayload, Interest } from '@/models/interest';
 
@@ -9,4 +10,5 @@ export interface InterestRepository {
   findAllByThemeId(id: string): Promise<Interest[]>;
   findByThemeIdAndUser(themeId: string, user: UserSignIn): Promise<Interest>;
   delete(id: string): Promise<void>;
+  getBiData(): Promise<InterestBI>;
 }

@@ -2,6 +2,7 @@ import { CreateInterestPayload, Interest } from '@/models/interest';
 import { InterestRepository } from '@/usecases/ports/interest-repository';
 import prismaClient from './prisma-client';
 import { UserSignIn } from '@/interfaces/user';
+import { InterestBI } from '@/interfaces/BI';
 
 export class PrismaInterestRepository implements InterestRepository {
   async add(interest: CreateInterestPayload): Promise<Interest> {
@@ -74,5 +75,30 @@ export class PrismaInterestRepository implements InterestRepository {
         AND: [{ themeId }, { ownerId: user.id }],
       },
     });
+  }
+
+  async getBiData(): Promise<InterestBI> {
+    const interestData = await prismaClient.interest.groupBy({
+      by: ['approved'],
+      _count: {
+        _all: true,
+      },
+    });
+
+    let interestsCount = 0;
+    let interestsApprovedCount = 0;
+
+    interestData.forEach((data) => {
+      const { approved, _count } = data;
+      interestsCount += _count._all;
+      if (approved) {
+        interestsApprovedCount += _count._all;
+      }
+    });
+
+    return {
+      interestsApprovedCount,
+      interestsCount,
+    };
   }
 }

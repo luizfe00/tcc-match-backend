@@ -1,11 +1,14 @@
 import { adaptValidator } from '@/adapters/express-validator-adapter';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
+import { makeCreateApprovalController } from '@/factories/controllers/make-create-approval-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
 import { makeCreateStageController } from '@/factories/controllers/make-create-stage-controller';
 import { makeCreateThemeController } from '@/factories/controllers/make-create-theme-controller';
 import { makeDeleteInterestController } from '@/factories/controllers/make-delete-interest-controller';
 import { makeDeleteThemeController } from '@/factories/controllers/make-delete-theme-controller';
 import { makeEditThemeController } from '@/factories/controllers/make-edit-theme-controller';
+import { makeGetBIDataController } from '@/factories/controllers/make-get-bi-data-controller';
+import { makeGetPaperController } from '@/factories/controllers/make-get-paper-controller';
 import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
 import { makeListPaperStagesController } from '@/factories/controllers/make-list-paper-stages-controller';
 import { makeListPendingFeedbackController } from '@/factories/controllers/make-list-pending-feedback-controller';
@@ -16,12 +19,15 @@ import { makeListUserInterestController } from '@/factories/controllers/make-lis
 import { makeListUserPapersController } from '@/factories/controllers/make-list-user-papers-controller';
 import { makeListUserThemesController } from '@/factories/controllers/make-list-user-themes-controller';
 import { makeSignInController } from '@/factories/controllers/make-signin-controller';
+import { makeUpdateApprovalController } from '@/factories/controllers/make-update-approval-controller';
 import { makeUpdateStageController } from '@/factories/controllers/make-update-stage-controller';
 import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
 import { makeApproveInterestValidator } from '@/factories/validators/make-approve-interest-validation';
+import { makeCreateApprovalValidator } from '@/factories/validators/make-create-approval-validator';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
 import { makeCreateStageValidator } from '@/factories/validators/make-create-stage-validator';
 import { makeCreateThemeValidator } from '@/factories/validators/make-create-theme-validator';
+import { makeUpdateApprovalValidator } from '@/factories/validators/make-update-approval-validator';
 import { adaptRoute } from '@adapters/express-route-adapter';
 import { Router, Express } from 'express';
 
@@ -47,6 +53,10 @@ export function setupRoutes(app: Express): void {
   listPaperStagesRoute(router);
   listPendingFeedbackRoute(router);
   updateStageRoute(router);
+  getPaperDetailsRoute(router);
+  getBIDataRoute(router);
+  createApprovalRoute(router);
+  updateApprovalRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -190,5 +200,39 @@ function updateStageRoute(router: Router) {
     '/stage/:id',
     adaptValidator(createAuthenticationValidator()),
     adaptRoute(makeUpdateStageController())
+  );
+}
+
+function getPaperDetailsRoute(router: Router) {
+  router.get(
+    '/paper/:id',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeGetPaperController())
+  );
+}
+
+function getBIDataRoute(router: Router) {
+  router.get(
+    '/dashboard',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeGetBIDataController())
+  );
+}
+
+function createApprovalRoute(router: Router) {
+  router.post(
+    '/approval',
+    adaptValidator(createAuthenticationValidator()),
+    adaptValidator(makeCreateApprovalValidator()),
+    adaptRoute(makeCreateApprovalController())
+  );
+}
+
+function updateApprovalRoute(router: Router) {
+  router.put(
+    '/approval/:id',
+    adaptValidator(createAuthenticationValidator()),
+    adaptValidator(makeUpdateApprovalValidator()),
+    adaptRoute(makeUpdateApprovalController())
   );
 }

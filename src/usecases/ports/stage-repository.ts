@@ -1,3 +1,4 @@
+import { StageBI } from '@/interfaces/BI';
 import { Stage, StagePayload, UpdateStagePayload } from '@/models/stage';
 
 export interface StageRepostiory {
@@ -7,4 +8,5 @@ export interface StageRepostiory {
   update(stage: UpdateStagePayload): Promise<void>;
   findById(id: string): Promise<Stage>;
   delete(id: string): Promise<void>;
+  getBIData(): Promise<StageBI>;
 }

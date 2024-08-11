@@ -1,4 +1,5 @@
 import { Interest } from './interest';
+import { Paper } from './paper';
 import { User } from './user';
 
 export interface Theme {
@@ -9,7 +10,7 @@ export interface Theme {
   ownerId: string;
   startDate: Date;
   endDate: Date;
-  paper?: any;
+  paper?: Paper;
   interests?: Interest[];
   owner?: User;
   createdAt: Date;
