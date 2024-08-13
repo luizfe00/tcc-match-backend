@@ -9,13 +9,17 @@ export class PrismaThemeRepository implements ThemeRepository {
     return await prismaClient.theme.create({
       data: {
         label: theme.label,
-        duration: theme.duration,
         summary: theme.summary,
+        startDate: theme.startDate,
+        endDate: theme.endDate,
         owner: {
           connect: {
             id: theme.ownerId,
           },
         },
+      },
+      include: {
+        owner: true,
       },
     });
   }
@@ -42,7 +46,6 @@ export class PrismaThemeRepository implements ThemeRepository {
       where: { id },
       data: {
         label: theme?.label,
-        duration: theme?.duration,
         summary: theme?.summary,
         startDate: theme?.startDate,
         endDate: theme?.endDate,

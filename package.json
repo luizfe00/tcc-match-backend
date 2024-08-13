@@ -35,5 +35,8 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.5.3",
     "typescript-transform-paths": "^3.4.7"
+  },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed/seed.ts"
   }
 }

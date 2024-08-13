@@ -20,6 +20,10 @@ export class PrismaInterestRepository implements InterestRepository {
           },
         },
       },
+      include: {
+        owner: true,
+        theme: true,
+      },
     });
   }
 

@@ -20,6 +20,7 @@ import { makeListUserPapersController } from '@/factories/controllers/make-list-
 import { makeListUserThemesController } from '@/factories/controllers/make-list-user-themes-controller';
 import { makeSignInController } from '@/factories/controllers/make-signin-controller';
 import { makeUpdateApprovalController } from '@/factories/controllers/make-update-approval-controller';
+import { makeUpdatePaperController } from '@/factories/controllers/make-update-paper-controller';
 import { makeUpdateStageController } from '@/factories/controllers/make-update-stage-controller';
 import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
 import { makeApproveInterestValidator } from '@/factories/validators/make-approve-interest-validation';
@@ -57,6 +58,7 @@ export function setupRoutes(app: Express): void {
   getBIDataRoute(router);
   createApprovalRoute(router);
   updateApprovalRoute(router);
+  updatePaperRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -234,5 +236,13 @@ function updateApprovalRoute(router: Router) {
     adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeUpdateApprovalValidator()),
     adaptRoute(makeUpdateApprovalController())
+  );
+}
+
+function updatePaperRoute(router: Router) {
+  router.put(
+    '/paper/:id',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeUpdatePaperController())
   );
 }

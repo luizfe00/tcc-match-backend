@@ -43,6 +43,9 @@ export class PrismaUserRepository implements UserRepository {
       where: {
         enrollment,
       },
+      include: {
+        orienteePaper: true,
+      },
     });
   }
 

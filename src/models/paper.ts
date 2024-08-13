@@ -26,3 +26,8 @@ export interface PaperPayload {
   professorId: string;
   interestId: string;
 }
+
+export interface EditPaperPayload {
+  id?: string;
+  documentUrl?: string;
+}

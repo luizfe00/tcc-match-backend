@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  seed    = "prisma/seed/seed.ts"
 }
 
 datasource db {
@@ -31,7 +32,6 @@ model Theme {
   id String @id @default(uuid())
   label String @unique
   summary String
-  duration Int
   ownerId String
   startDate DateTime @default(now())
   endDate DateTime @default(now())

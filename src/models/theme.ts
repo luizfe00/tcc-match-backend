@@ -6,15 +6,14 @@ export interface Theme {
   id?: string;
   label: string;
   summary: string;
-  duration: number;
   ownerId: string;
   startDate: Date;
   endDate: Date;
   paper?: Paper;
   interests?: Interest[];
   owner?: User;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   deletedAt?: Date;
 }
 

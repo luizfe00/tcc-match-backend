@@ -1,25 +1,27 @@
-import { CreateInterest } from '@/usecases/create-interest';
+import { UpdatePaper } from '@/usecases/update-paper';
 import { Controller, HttpRequest, HttpResponse } from './ports';
-import { Interest } from '@/models/interest';
-import { StatusCodes } from '@/constants/SatusCode';
 import { RequestErrorNames } from '@/constants/Errors';
+import { StatusCodes } from '@/constants/SatusCode';
 
-export class CreateInterestController implements Controller {
-  constructor(private readonly useCase: CreateInterest) {}
+export class UpdatePaperController implements Controller {
+  constructor(private readonly useCase: UpdatePaper) {}
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const interestPayload = HttpRequest.body as Interest;
-      const interest = await this.useCase.perform(interestPayload, HttpRequest?.token);
+      const payload = {
+        id: HttpRequest.params.id,
+        ...HttpRequest.body,
+      };
+      await this.useCase.perform(payload, HttpRequest.token);
       return {
-        body: interest,
-        statusCode: StatusCodes.CREATED,
+        body: undefined,
+        statusCode: StatusCodes.UPDATED,
       };
     } catch (error) {
       const BadRequestError = error.constructor.name === RequestErrorNames.BAD_REQUEST;
-      const ExistingEntityError = error.constructor.name === RequestErrorNames.EXISTING_ENTITY;
+      const NotFoundError = error.constructor.name === RequestErrorNames.NOT_FOUND;
 
-      if (BadRequestError || ExistingEntityError) {
+      if (BadRequestError || NotFoundError) {
         return {
           statusCode: error.httpStatus,
           body: {

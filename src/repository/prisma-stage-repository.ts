@@ -8,6 +8,7 @@ export class PrismaStageRepository implements StageRepostiory {
     return await prismaClient.stage.create({
       data: {
         label: stage.label,
+        message: stage?.message,
         paper: {
           connect: {
             id: stage.paperId,
