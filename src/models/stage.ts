@@ -15,7 +15,6 @@ export interface StagePayload {
   id?: string;
   label: string;
   viewed?: boolean;
-  documentUrl: string;
   message?: string;
   feedback?: string;
   paperId?: string;

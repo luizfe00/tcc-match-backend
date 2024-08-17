@@ -4,7 +4,7 @@ import { UseCase } from './ports/use-case';
 import { PaperRepository } from './ports/paper-repository';
 import { decode } from 'jsonwebtoken';
 import { UserSignIn } from '@/interfaces/user';
-import { BadRequestError, NotFoundError, UnauthorizedError } from './errors';
+import { BadRequestError, ExistingEntityError, NotFoundError } from './errors';
 
 export class CreateApproval implements UseCase {
   constructor(
@@ -26,6 +26,18 @@ export class CreateApproval implements UseCase {
       throw new BadRequestError('Action not authorized for user');
     }
 
-    return await this.approvalRepository.add(approval);
+    const approvalsFound = await this.approvalRepository.listByPaperId(approval.paperId);
+    const existingApproval = approvalsFound.find(
+      (currApproval) => approval.type === currApproval.type && currApproval.approval !== false
+    );
+
+    if (existingApproval) throw new ExistingEntityError('Approval', 'id', existingApproval.id);
+
+    const approvalPayload = {
+      ...approval,
+      type: paper.type,
+    };
+
+    return await this.approvalRepository.add(approvalPayload);
   }
 }

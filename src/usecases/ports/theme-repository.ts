@@ -16,6 +16,7 @@ export interface ThemeRepository {
   list(): Promise<Theme[]>;
   listAllStudents(): Promise<Theme[]>;
   listAllProfessors(): Promise<Theme[]>;
+  listDeletedByUserId(id: string): Promise<Theme[]>;
 
   getThemeCount(): Promise<ThemeBI>;
 }

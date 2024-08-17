@@ -36,6 +36,23 @@ export class PrismaApprovalRepository implements ApprovalRepository {
     });
   }
 
+  async listPending(): Promise<Approval[]> {
+    return await prismaClient.approval.findMany({
+      where: {
+        approval: null,
+      },
+      include: {
+        paper: {
+          include: {
+            advisor: true,
+            orientee: true,
+            theme: true,
+          },
+        },
+      },
+    });
+  }
+
   async update(approval: Approval): Promise<void> {
     await prismaClient.approval.update({
       where: {

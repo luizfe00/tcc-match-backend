@@ -5,5 +5,6 @@ export interface ApprovalRepository {
   getById(id: string): Promise<Approval>;
   list(): Promise<Approval[]>;
   listByPaperId(paperId: string): Promise<Approval[]>;
+  listPending(): Promise<Approval[]>;
   update(approval: Approval): Promise<void>;
 }

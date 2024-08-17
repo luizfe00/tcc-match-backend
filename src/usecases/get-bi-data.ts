@@ -29,10 +29,10 @@ export class GetBIData implements UseCase {
     const stageBIData = await this.stageRepository.getBIData();
 
     return {
-      ...paperBIData,
-      ...themeBIData,
-      ...interestBIData,
-      ...stageBIData,
+      interests: interestBIData,
+      papers: paperBIData,
+      stages: stageBIData,
+      themes: themeBIData,
     };
   }
 }

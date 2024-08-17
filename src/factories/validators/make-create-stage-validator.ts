@@ -7,7 +7,6 @@ export const makeCreateStageValidator = (): Validator => {
   const joiSchema = Joi.object<StagePayload>({
     label: Joi.string().required(),
     paperId: Joi.string().uuid().required(),
-    documentUrl: Joi.string().uri().required(),
     message: Joi.string().optional(),
   });
 

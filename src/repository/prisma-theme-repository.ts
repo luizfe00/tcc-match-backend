@@ -109,6 +109,7 @@ export class PrismaThemeRepository implements ThemeRepository {
             },
           ],
         },
+        deletedAt: null,
       },
       include: {
         owner: true,
@@ -124,11 +125,26 @@ export class PrismaThemeRepository implements ThemeRepository {
         owner: {
           role: Role.STUDENT,
         },
+        deletedAt: null,
       },
       include: {
         owner: true,
         interests: true,
         paper: true,
+      },
+    });
+  }
+
+  async listDeletedByUserId(id: string): Promise<Theme[]> {
+    return await prismaClient.theme.findMany({
+      where: {
+        ownerId: id,
+        deletedAt: {
+          not: null,
+        },
+      },
+      include: {
+        owner: true,
       },
     });
   }

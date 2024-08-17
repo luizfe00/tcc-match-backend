@@ -38,7 +38,9 @@ export class ApproveInterest implements UseCase {
     if (!student) {
       throw new NotFoundError('Student', ptcc.studentId);
     }
+
     await this.interestRepository.approve(ptcc.interestId);
+    await this.themeRepository.softDelete(ptcc.themeId);
     return await this.paperRepository.add(ptcc);
   }
 }

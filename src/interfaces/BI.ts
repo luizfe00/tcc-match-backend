@@ -1,6 +1,7 @@
-export type PaperBI = {
-  papersCount: number;
-  papersApprovedCount: number;
+export type PaperPerMonthQuery = {
+  year: string;
+  month: string;
+  totalPapers: number;
   ptccCount: number;
   ptccApprovedCount: number;
   tccCount: number;
@@ -27,4 +28,9 @@ export type ThemeBI = {
   professorActiveThemeCount: number;
 };
 
-export type DashboardBI = PaperBI & StageBI & InterestBI & ThemeBI;
+export type DashboardBI = {
+  papers: PaperPerMonthQuery[];
+  stages: StageBI;
+  interests: InterestBI;
+  themes: ThemeBI;
+};

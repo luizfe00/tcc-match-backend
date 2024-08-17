@@ -1,4 +1,4 @@
-import { PaperBI } from '@/interfaces/BI';
+import { PaperPerMonthQuery } from '@/interfaces/BI';
 import { Paper, PaperPayload } from '@/models/paper';
 
 export interface PaperRepository {
@@ -8,5 +8,5 @@ export interface PaperRepository {
   delete(id: string): Promise<void>;
   findByThemeId(id: string): Promise<Paper>;
   findById(id: string): Promise<Paper>;
-  getPaperData(): Promise<PaperBI>;
+  getPaperData(): Promise<PaperPerMonthQuery[]>;
 }

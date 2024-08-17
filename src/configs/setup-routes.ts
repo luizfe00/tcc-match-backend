@@ -10,7 +10,9 @@ import { makeEditThemeController } from '@/factories/controllers/make-edit-theme
 import { makeGetBIDataController } from '@/factories/controllers/make-get-bi-data-controller';
 import { makeGetPaperController } from '@/factories/controllers/make-get-paper-controller';
 import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
+import { makeListDeletedThemesController } from '@/factories/controllers/make-list-deleted-themes-controller';
 import { makeListPaperStagesController } from '@/factories/controllers/make-list-paper-stages-controller';
+import { makeListPendingApprovalsController } from '@/factories/controllers/make-list-pending-approvals-controller';
 import { makeListPendingFeedbackController } from '@/factories/controllers/make-list-pending-feedback-controller';
 import { makeListProfessorThemesController } from '@/factories/controllers/make-list-professor-themes-controller';
 import { makeListStudentThemesController } from '@/factories/controllers/make-list-student-themes-controller';
@@ -59,6 +61,8 @@ export function setupRoutes(app: Express): void {
   createApprovalRoute(router);
   updateApprovalRoute(router);
   updatePaperRoute(router);
+  listDeletedThemesRoute(router);
+  listPendingApprovalsRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -244,5 +248,21 @@ function updatePaperRoute(router: Router) {
     '/paper/:id',
     adaptValidator(createAuthenticationValidator()),
     adaptRoute(makeUpdatePaperController())
+  );
+}
+
+function listDeletedThemesRoute(router: Router) {
+  router.get(
+    '/themes/deleted',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListDeletedThemesController())
+  );
+}
+
+function listPendingApprovalsRoute(router: Router) {
+  router.get(
+    '/approval/pending',
+    adaptValidator(createAuthenticationValidator()),
+    adaptRoute(makeListPendingApprovalsController())
   );
 }
