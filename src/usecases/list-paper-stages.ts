@@ -17,9 +17,9 @@ export class ListPaperStages implements UseCase {
 
     const papers = await this.paperRepository.listByUser(user.id);
 
-    const userBelongsToPaper = papers.some(
-      (paper) => paper.orientee?.id === user.id || paper?.advisor.id === user.id
-    );
+    const userBelongsToPaper =
+      user.role === 'COORDINATOR' ||
+      papers.some((paper) => paper.orientee?.id === user.id || paper?.advisor.id === user.id);
     if (!userBelongsToPaper) throw new BadRequestError('User does not belong to paper.');
 
     return await this.stageRepository.listByPaper(paperId);
