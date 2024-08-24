@@ -10,7 +10,7 @@ export class EditThemeController implements Controller {
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const themePayload = { ...HttpRequest.body, id: HttpRequest.params.id } as Theme;
-      await this.useCase.perform(themePayload, HttpRequest.token);
+      await this.useCase.perform(themePayload, HttpRequest.user);
       return {
         body: {},
         statusCode: StatusCodes.UPDATED,

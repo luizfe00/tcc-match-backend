@@ -7,7 +7,7 @@ export class GetBIDataController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const data = await this.useCase.perform(HttpRequest.token);
+      const data = await this.useCase.perform(HttpRequest.user);
       return {
         body: data,
         statusCode: StatusCodes.OK,

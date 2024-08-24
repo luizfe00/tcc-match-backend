@@ -12,7 +12,7 @@ export class UpdatePaperController implements Controller {
         id: HttpRequest.params.id,
         ...HttpRequest.body,
       };
-      await this.useCase.perform(payload, HttpRequest.token);
+      await this.useCase.perform(payload, HttpRequest.user);
       return {
         body: undefined,
         statusCode: StatusCodes.UPDATED,

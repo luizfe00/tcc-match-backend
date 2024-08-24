@@ -1,4 +1,3 @@
-import { decode } from 'jsonwebtoken';
 import { PaperRepository } from './ports/paper-repository';
 import { UseCase } from './ports/use-case';
 import { UserSignIn } from '@/interfaces/user';
@@ -8,9 +7,7 @@ import { BadRequestError, NotFoundError } from './errors';
 export class GetPaper implements UseCase {
   constructor(private readonly paperRepository: PaperRepository) {}
 
-  async perform(id?: string, token?: string): Promise<Paper> {
-    const user = decode(token) as UserSignIn;
-
+  async perform(id: string, user: UserSignIn): Promise<Paper> {
     const paper = await this.paperRepository.findById(id);
 
     if (!paper) {

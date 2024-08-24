@@ -7,7 +7,7 @@ export class ListDeletedThemesController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const themes = await this.useCase.perform(HttpRequest.token);
+      const themes = await this.useCase.perform(HttpRequest.user);
       return {
         body: themes,
         statusCode: StatusCodes.OK,

@@ -1,3 +1,5 @@
+import { UserSignIn } from '@/interfaces/user';
+
 export interface UseCase {
-  perform(request?: any, token?: string): Promise<any>;
+  perform(request?: any, user?: UserSignIn): Promise<any>;
 }

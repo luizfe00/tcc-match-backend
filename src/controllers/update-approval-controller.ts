@@ -12,7 +12,7 @@ export class UpdateApprovalController implements Controller {
         ...HttpRequest.body,
         id: HttpRequest.params.id,
       };
-      await this.useCase.perform(payload, HttpRequest.token);
+      await this.useCase.perform(payload, HttpRequest.user);
       return {
         body: undefined,
         statusCode: StatusCodes.OK,

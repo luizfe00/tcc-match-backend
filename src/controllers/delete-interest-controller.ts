@@ -8,7 +8,7 @@ export class DeleteInterestController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      await this.useCase.perform(HttpRequest.params.id, HttpRequest.token);
+      await this.useCase.perform(HttpRequest.params.id, HttpRequest.user);
       return {
         body: {},
         statusCode: StatusCodes.OK,

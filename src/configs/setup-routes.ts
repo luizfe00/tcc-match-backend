@@ -24,7 +24,6 @@ import { makeSignInController } from '@/factories/controllers/make-signin-contro
 import { makeUpdateApprovalController } from '@/factories/controllers/make-update-approval-controller';
 import { makeUpdatePaperController } from '@/factories/controllers/make-update-paper-controller';
 import { makeUpdateStageController } from '@/factories/controllers/make-update-stage-controller';
-import { createAuthenticationValidator } from '@/factories/validators/create-authentication-validator';
 import { makeApproveInterestValidator } from '@/factories/validators/make-approve-interest-validation';
 import { makeCreateApprovalValidator } from '@/factories/validators/make-create-approval-validator';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
@@ -70,165 +69,100 @@ function createSignInRoute(router: Router) {
 }
 
 function getUserRoute(router: Router) {
-  router.get(
-    '/me',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeGetUserController())
-  );
+  router.get('/me', adaptRoute(makeGetUserController()));
 }
 
 function createThemeRoute(router: Router) {
   router.post(
     '/theme',
-    adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeCreateThemeValidator()),
     adaptRoute(makeCreateThemeController())
   );
 }
 
 function editThemeRoute(router: Router) {
-  router.put(
-    '/theme/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeEditThemeController())
-  );
+  router.put('/theme/:id', adaptRoute(makeEditThemeController()));
 }
 
 function deleteThemeRoute(router: Router) {
-  router.delete(
-    '/theme/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeDeleteThemeController())
-  );
+  router.delete('/theme/:id', adaptRoute(makeDeleteThemeController()));
 }
 
 function listStudenThemesRoute(router: Router) {
-  router.get(
-    '/theme/student',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListStudentThemesController())
-  );
+  router.get('/theme/student', adaptRoute(makeListStudentThemesController()));
 }
 
 function listUserThemesRoute(router: Router) {
-  router.get(
-    '/theme',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListUserThemesController())
-  );
+  router.get('/theme', adaptRoute(makeListUserThemesController()));
 }
 
 function listProfessorThemesRoute(router: Router) {
-  router.get(
-    '/theme/professor',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListProfessorThemesController())
-  );
+  router.get('/theme/professor', adaptRoute(makeListProfessorThemesController()));
 }
 
 function createInterest(router: Router) {
   router.post(
     '/interest',
-    adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeCreateInterestValidator()),
     adaptRoute(makeCreateInterestController())
   );
 }
 
 function deleteInterest(router: Router) {
-  router.delete(
-    '/interest/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeDeleteInterestController())
-  );
+  router.delete('/interest/:id', adaptRoute(makeDeleteInterestController()));
 }
 
 function listUserInterest(router: Router) {
-  router.get(
-    '/interest',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListUserInterestController())
-  );
+  router.get('/interest', adaptRoute(makeListUserInterestController()));
 }
 
 function listThemeInterest(router: Router) {
-  router.get(
-    '/interest/theme/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListInterestController())
-  );
+  router.get('/interest/theme/:id', adaptRoute(makeListInterestController()));
 }
 
 function approveInterest(router: Router) {
   router.post(
     '/interest/approve',
-    adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeApproveInterestValidator()),
     adaptRoute(makeApproveInterestController())
   );
 }
 
 function listUserPapersRoute(router: Router) {
-  router.get(
-    '/paper',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListUserPapersController())
-  );
+  router.get('/paper', adaptRoute(makeListUserPapersController()));
 }
 
 function createStageRoute(router: Router) {
   router.post(
     '/stage',
-    adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeCreateStageValidator()),
     adaptRoute(makeCreateStageController())
   );
 }
 
 function listPaperStagesRoute(router: Router) {
-  router.get(
-    '/stage/paper/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListPaperStagesController())
-  );
+  router.get('/stage/paper/:id', adaptRoute(makeListPaperStagesController()));
 }
 
 function listPendingFeedbackRoute(router: Router) {
-  router.get(
-    '/stage/pending',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListPendingFeedbackController())
-  );
+  router.get('/stage/pending', adaptRoute(makeListPendingFeedbackController()));
 }
 
 function updateStageRoute(router: Router) {
-  router.put(
-    '/stage/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeUpdateStageController())
-  );
+  router.put('/stage/:id', adaptRoute(makeUpdateStageController()));
 }
 
 function getPaperDetailsRoute(router: Router) {
-  router.get(
-    '/paper/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeGetPaperController())
-  );
+  router.get('/paper/:id', adaptRoute(makeGetPaperController()));
 }
 
 function getBIDataRoute(router: Router) {
-  router.get(
-    '/dashboard',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeGetBIDataController())
-  );
+  router.get('/dashboard', adaptRoute(makeGetBIDataController()));
 }
 
 function createApprovalRoute(router: Router) {
   router.post(
     '/approval',
-    adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeCreateApprovalValidator()),
     adaptRoute(makeCreateApprovalController())
   );
@@ -237,32 +171,19 @@ function createApprovalRoute(router: Router) {
 function updateApprovalRoute(router: Router) {
   router.put(
     '/approval/:id',
-    adaptValidator(createAuthenticationValidator()),
     adaptValidator(makeUpdateApprovalValidator()),
     adaptRoute(makeUpdateApprovalController())
   );
 }
 
 function updatePaperRoute(router: Router) {
-  router.put(
-    '/paper/:id',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeUpdatePaperController())
-  );
+  router.put('/paper/:id', adaptRoute(makeUpdatePaperController()));
 }
 
 function listDeletedThemesRoute(router: Router) {
-  router.get(
-    '/themes/deleted',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListDeletedThemesController())
-  );
+  router.get('/themes/deleted', adaptRoute(makeListDeletedThemesController()));
 }
 
 function listPendingApprovalsRoute(router: Router) {
-  router.get(
-    '/approval/pending',
-    adaptValidator(createAuthenticationValidator()),
-    adaptRoute(makeListPendingApprovalsController())
-  );
+  router.get('/approval/pending', adaptRoute(makeListPendingApprovalsController()));
 }

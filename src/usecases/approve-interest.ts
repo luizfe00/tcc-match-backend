@@ -1,7 +1,6 @@
 import { UseCase } from './ports/use-case';
 import { BadRequestError, ExistingEntityError, NotFoundError } from './errors';
 import { ThemeRepository } from './ports/theme-repository';
-import { decode } from 'jsonwebtoken';
 import { Paper, PaperPayload } from '@/models/paper';
 import { UserSignIn } from '@/interfaces/user';
 import { PaperRepository } from './ports/paper-repository';
@@ -16,8 +15,7 @@ export class ApproveInterest implements UseCase {
     private readonly interestRepository: InterestRepository
   ) {}
 
-  async perform(ptcc: PaperPayload, token: string): Promise<Paper> {
-    const user = decode(token) as UserSignIn;
+  async perform(ptcc: PaperPayload, user: UserSignIn): Promise<Paper> {
     const theme = await this.themeRepository.findById(ptcc.themeId);
     if (!theme) {
       throw new NotFoundError('Theme', ptcc.themeId);

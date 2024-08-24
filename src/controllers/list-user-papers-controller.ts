@@ -7,7 +7,7 @@ export class ListUserPapersController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const papers = await this.useCase.perform(HttpRequest.token);
+      const papers = await this.useCase.perform(HttpRequest.user);
       return {
         body: papers,
         statusCode: StatusCodes.OK,

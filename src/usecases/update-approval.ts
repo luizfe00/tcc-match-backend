@@ -3,7 +3,6 @@ import { ApprovalRepository } from './ports/approval-repository';
 import { PaperRepository } from './ports/paper-repository';
 import { UseCase } from './ports/use-case';
 import { UserSignIn } from '@/interfaces/user';
-import { decode } from 'jsonwebtoken';
 import { BadRequestError, NotFoundError } from './errors';
 
 export class UpdateApproval implements UseCase {
@@ -12,9 +11,7 @@ export class UpdateApproval implements UseCase {
     private readonly paperRepository: PaperRepository
   ) {}
 
-  async perform(approval?: Approval, token?: string): Promise<void> {
-    const user = decode(token) as UserSignIn;
-
+  async perform(approval: Approval, user: UserSignIn): Promise<void> {
     const paper = await this.paperRepository.findById(approval?.paperId);
     if (!paper) {
       throw new NotFoundError('Paper', approval.paperId);

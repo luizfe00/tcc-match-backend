@@ -8,7 +8,7 @@ export class GetPaperController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const paper = await this.useCase.perform(HttpRequest.params.id, HttpRequest.token);
+      const paper = await this.useCase.perform(HttpRequest.params.id, HttpRequest.user);
       return {
         body: paper,
         statusCode: StatusCodes.OK,

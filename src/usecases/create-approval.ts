@@ -2,7 +2,6 @@ import { Approval } from '@/models/approval';
 import { ApprovalRepository } from './ports/approval-repository';
 import { UseCase } from './ports/use-case';
 import { PaperRepository } from './ports/paper-repository';
-import { decode } from 'jsonwebtoken';
 import { UserSignIn } from '@/interfaces/user';
 import { BadRequestError, ExistingEntityError, NotFoundError } from './errors';
 
@@ -12,9 +11,7 @@ export class CreateApproval implements UseCase {
     private readonly paperRepository: PaperRepository
   ) {}
 
-  async perform(approval?: Approval, token?: string): Promise<Approval> {
-    const user = decode(token) as UserSignIn;
-
+  async perform(approval: Approval, user: UserSignIn): Promise<Approval> {
     const paper = await this.paperRepository.findById(approval?.paperId);
     if (!paper) {
       throw new NotFoundError('Paper', approval.paperId);

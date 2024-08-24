@@ -7,7 +7,7 @@ export class GetUserController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const user = await this.useCase.perform(HttpRequest.token);
+      const user = await this.useCase.perform(HttpRequest.user);
       return {
         body: user,
         statusCode: StatusCodes.OK,

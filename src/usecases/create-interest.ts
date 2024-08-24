@@ -1,5 +1,3 @@
-import { decode } from 'jsonwebtoken';
-
 import { CreateInterestPayload, Interest } from '@/models/interest';
 import { InterestRepository } from './ports/interest-repository';
 import { UseCase } from './ports/use-case';
@@ -10,8 +8,7 @@ import { Role } from '@prisma/client';
 export class CreateInterest implements UseCase {
   constructor(private readonly interestRepository: InterestRepository) {}
 
-  async perform(interest: CreateInterestPayload, token: string): Promise<Interest> {
-    const user = decode(token) as UserSignIn;
+  async perform(interest: CreateInterestPayload, user: UserSignIn): Promise<Interest> {
     const interestFound = await this.interestRepository.findByThemeIdAndUser(
       interest.themeId,
       user

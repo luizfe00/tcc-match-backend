@@ -8,7 +8,7 @@ export class ListPendingApprovalsController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const approvals = await this.useCase.perform(HttpRequest.token);
+      const approvals = await this.useCase.perform(HttpRequest.user);
       return {
         body: approvals,
         statusCode: StatusCodes.OK,

@@ -10,7 +10,7 @@ export class CreateInterestController implements Controller {
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const interestPayload = HttpRequest.body as Interest;
-      const interest = await this.useCase.perform(interestPayload, HttpRequest?.token);
+      const interest = await this.useCase.perform(interestPayload, HttpRequest?.user);
       return {
         body: interest,
         statusCode: StatusCodes.CREATED,

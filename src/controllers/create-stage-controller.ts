@@ -8,7 +8,7 @@ export class CreateStageController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const stage = await this.useCase.perform(HttpRequest.body, HttpRequest.token);
+      const stage = await this.useCase.perform(HttpRequest.body, HttpRequest.user);
       return {
         body: stage,
         statusCode: StatusCodes.CREATED,

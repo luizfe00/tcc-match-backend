@@ -9,7 +9,7 @@ export class DeleteThemeController implements Controller {
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const id = HttpRequest.params.id as string;
-      await this.useCase.perform(id, HttpRequest.token);
+      await this.useCase.perform(id, HttpRequest.user);
       return {
         body: {},
         statusCode: StatusCodes.OK,

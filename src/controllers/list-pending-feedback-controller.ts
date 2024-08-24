@@ -7,7 +7,7 @@ export class ListPendingFeedbackController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const stages = await this.useCase.perform(HttpRequest.token);
+      const stages = await this.useCase.perform(HttpRequest.user);
       return {
         body: stages,
         statusCode: StatusCodes.OK,

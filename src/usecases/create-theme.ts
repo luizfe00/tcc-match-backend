@@ -1,4 +1,3 @@
-import { decode } from 'jsonwebtoken';
 import { Role } from '@prisma/client';
 
 import { Theme, ThemePayload } from '@/models/theme';
@@ -10,13 +9,7 @@ import { UserSignIn } from '@/interfaces/user';
 export class CreateTheme implements UseCase {
   constructor(private readonly themeRepository: ThemeRepository) {}
 
-  async perform(theme: ThemePayload, token: string): Promise<Theme> {
-    const user = decode(token) as UserSignIn;
-
-    return this.createTheme(theme, user);
-  }
-
-  private async createTheme(theme: ThemePayload, user: UserSignIn) {
+  async perform(theme: ThemePayload, user: UserSignIn): Promise<Theme> {
     const userThemes = await this.themeRepository.findAllByUser(user.id);
     if (userThemes.length && user.role === Role.STUDENT) {
       throw new BadRequestError('Student can only have one theme created at a time');

@@ -8,7 +8,7 @@ export class ListPaperStagesController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const stages = await this.useCase.perform(HttpRequest.params.id, HttpRequest.token);
+      const stages = await this.useCase.perform(HttpRequest.params.id, HttpRequest.user);
       return {
         body: stages,
         statusCode: StatusCodes.CREATED,

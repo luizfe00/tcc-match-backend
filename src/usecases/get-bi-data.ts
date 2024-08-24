@@ -4,7 +4,6 @@ import { PaperRepository } from './ports/paper-repository';
 import { StageRepostiory } from './ports/stage-repository';
 import { ThemeRepository } from './ports/theme-repository';
 import { UseCase } from './ports/use-case';
-import { decode } from 'jsonwebtoken';
 import { UserSignIn } from '@/interfaces/user';
 import { BadRequestError } from './errors';
 
@@ -16,9 +15,7 @@ export class GetBIData implements UseCase {
     private readonly stageRepository: StageRepostiory
   ) {}
 
-  async perform(token?: string): Promise<DashboardBI> {
-    const user = decode(token) as UserSignIn;
-
+  async perform(user: UserSignIn): Promise<DashboardBI> {
     if (user.role !== 'COORDINATOR') {
       throw new BadRequestError('User cannot access this info.');
     }

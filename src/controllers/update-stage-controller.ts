@@ -9,7 +9,7 @@ export class UpdateStageController implements Controller {
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const stagePayload = { ...HttpRequest.body, id: HttpRequest.params.id };
-      await this.useCase.perform(stagePayload, HttpRequest.token);
+      await this.useCase.perform(stagePayload, HttpRequest.user);
       return {
         body: undefined,
         statusCode: StatusCodes.OK,

@@ -8,7 +8,7 @@ export class ListThemeInterestsController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const interests = await this.useCase.perform(HttpRequest.params.id, HttpRequest.token);
+      const interests = await this.useCase.perform(HttpRequest.params.id, HttpRequest.user);
       return {
         body: interests,
         statusCode: StatusCodes.OK,

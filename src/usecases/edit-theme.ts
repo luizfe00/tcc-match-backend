@@ -1,5 +1,3 @@
-import { decode } from 'jsonwebtoken';
-
 import { Theme } from '@/models/theme';
 import { ThemeRepository } from './ports/theme-repository';
 import { UseCase } from './ports/use-case';
@@ -9,8 +7,7 @@ import { UserSignIn } from '@/interfaces/user';
 export class EditTheme implements UseCase {
   constructor(private readonly themeRepository: ThemeRepository) {}
 
-  async perform(theme: Theme, token: string): Promise<void> {
-    const user = decode(token) as UserSignIn;
+  async perform(theme: Theme, user: UserSignIn): Promise<void> {
     const themeEntity = await this.themeRepository.findById(theme.id);
     if (!themeEntity) throw new NotFoundError('Theme', theme.id);
     const themeBelongsToUser = themeEntity.ownerId === user.id;

@@ -1,5 +1,3 @@
-import { decode } from 'jsonwebtoken';
-
 import { Interest } from '@/models/interest';
 import { InterestRepository } from './ports/interest-repository';
 import { UseCase } from './ports/use-case';
@@ -13,8 +11,7 @@ export class ListThemeInterests implements UseCase {
     private readonly themeRepository: ThemeRepository
   ) {}
 
-  async perform(id?: string, token?: string): Promise<Interest[]> {
-    const user = decode(token) as UserSignIn;
+  async perform(id: string, user: UserSignIn): Promise<Interest[]> {
     const theme = await this.themeRepository.findById(id);
     if (!theme) {
       throw new NotFoundError('Theme', id);

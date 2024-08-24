@@ -10,7 +10,7 @@ export class CreateThemeController implements Controller {
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const themePayload = HttpRequest.body as ThemePayload;
-      const theme = await this.useCase.perform(themePayload, HttpRequest.token);
+      const theme = await this.useCase.perform(themePayload, HttpRequest.user);
       return {
         body: theme,
         statusCode: StatusCodes.CREATED,

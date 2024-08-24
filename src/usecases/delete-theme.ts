@@ -1,5 +1,3 @@
-import { decode } from 'jsonwebtoken';
-
 import { ThemeRepository } from './ports/theme-repository';
 import { UseCase } from './ports/use-case';
 import { NotFoundError, BadRequestError } from './errors';
@@ -9,8 +7,7 @@ import { Role } from '@prisma/client';
 export class DeleteTheme implements UseCase {
   constructor(private readonly themeRepository: ThemeRepository) {}
 
-  async perform(id: string, token?: string): Promise<void> {
-    const user = decode(token) as UserSignIn;
+  async perform(id: string, user: UserSignIn): Promise<void> {
     const themeEntity = await this.themeRepository.findById(id);
     if (!themeEntity) throw new NotFoundError('Theme', id);
     const themeBelongsToUser = themeEntity.ownerId === user.id;

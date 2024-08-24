@@ -1,15 +1,13 @@
 import { UpdateStagePayload } from '@/models/stage';
 import { StageRepostiory } from './ports/stage-repository';
 import { UseCase } from './ports/use-case';
-import { decode } from 'jsonwebtoken';
 import { UserSignIn } from '@/interfaces/user';
 import { BadRequestError, NotFoundError } from './errors';
 
 export class UpdateStage implements UseCase {
   constructor(private readonly stageRepository: StageRepostiory) {}
 
-  async perform(stage?: UpdateStagePayload, token?: string): Promise<any> {
-    const user = decode(token) as UserSignIn;
+  async perform(stage: UpdateStagePayload, user: UserSignIn): Promise<any> {
     const stageFound = await this.stageRepository.findById(stage.id);
     if (!stageFound) {
       throw new NotFoundError('Stage', stage.id);

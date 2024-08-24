@@ -8,7 +8,7 @@ export class CreateApprovalController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const approval = await this.useCase.perform(HttpRequest.body, HttpRequest.token);
+      const approval = await this.useCase.perform(HttpRequest.body, HttpRequest.user);
       return {
         body: approval,
         statusCode: StatusCodes.CREATED,

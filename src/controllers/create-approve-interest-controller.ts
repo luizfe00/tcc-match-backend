@@ -8,7 +8,7 @@ export class ApproveInterestController implements Controller {
 
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const ptcc = await this.useCase.perform(HttpRequest.body, HttpRequest.token);
+      const ptcc = await this.useCase.perform(HttpRequest.body, HttpRequest.user);
       return {
         body: ptcc,
         statusCode: StatusCodes.CREATED,

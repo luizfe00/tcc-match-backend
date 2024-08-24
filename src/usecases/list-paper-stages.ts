@@ -1,7 +1,6 @@
 import { Stage } from '@/models/stage';
 import { StageRepostiory } from './ports/stage-repository';
 import { UseCase } from './ports/use-case';
-import { decode } from 'jsonwebtoken';
 import { UserSignIn } from '@/interfaces/user';
 import { BadRequestError } from './errors';
 import { PaperRepository } from './ports/paper-repository';
@@ -12,9 +11,7 @@ export class ListPaperStages implements UseCase {
     private readonly stageRepository: StageRepostiory
   ) {}
 
-  async perform(paperId: string, token?: string): Promise<Stage[]> {
-    const user = decode(token) as UserSignIn;
-
+  async perform(paperId: string, user?: UserSignIn): Promise<Stage[]> {
     const papers = await this.paperRepository.listByUser(user.id);
 
     const userBelongsToPaper =
