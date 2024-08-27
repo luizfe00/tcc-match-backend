@@ -1,3 +1,4 @@
+import { Category } from './category';
 import { Interest } from './interest';
 import { Paper } from './paper';
 import { User } from './user';
@@ -11,6 +12,7 @@ export interface Theme {
   endDate: Date;
   paper?: Paper;
   interests?: Interest[];
+  categories?: Category[];
   owner?: User;
   createdAt?: Date;
   updatedAt?: Date;

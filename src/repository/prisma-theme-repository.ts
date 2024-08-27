@@ -49,6 +49,12 @@ export class PrismaThemeRepository implements ThemeRepository {
         summary: theme?.summary,
         startDate: theme?.startDate,
         endDate: theme?.endDate,
+        categories: {
+          set:
+            theme.categories?.map((category) => ({
+              id: category.id,
+            })) || [],
+        },
       },
     });
   }
@@ -147,47 +153,5 @@ export class PrismaThemeRepository implements ThemeRepository {
         owner: true,
       },
     });
-  }
-
-  async getThemeCount(): Promise<ThemeBI> {
-    const themeData = await prismaClient.theme.findMany({
-      include: {
-        paper: true,
-        owner: true,
-      },
-    });
-
-    let themeCount = themeData.length;
-    let themeActiveCount = 0;
-    let studentActiveThemeCount = 0;
-    let professorActiveThemeCount = 0;
-    let professorThemeCount = 0;
-    let studentThemeCount = 0;
-
-    themeData.forEach((data) => {
-      if (data.paper !== null) {
-        themeActiveCount++;
-      }
-      if (data.owner.role === 'STUDENT') {
-        studentThemeCount++;
-        if (data.paper !== null) {
-          studentActiveThemeCount++;
-        }
-      } else {
-        professorThemeCount++;
-        if (data.paper !== null) {
-          professorActiveThemeCount++;
-        }
-      }
-    });
-
-    return {
-      themeCount,
-      themeActiveCount,
-      professorActiveThemeCount,
-      professorThemeCount,
-      studentActiveThemeCount,
-      studentThemeCount,
-    };
   }
 }

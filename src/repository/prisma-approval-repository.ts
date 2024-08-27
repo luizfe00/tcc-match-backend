@@ -61,6 +61,7 @@ export class PrismaApprovalRepository implements ApprovalRepository {
       data: {
         approval: approval?.approval,
         response: approval?.response,
+        status: approval?.status,
       },
     });
   }

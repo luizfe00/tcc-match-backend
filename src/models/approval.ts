@@ -1,4 +1,4 @@
-import { PaperType } from '@prisma/client';
+import { ApprovalStatus, PaperType } from '@prisma/client';
 import { Paper } from './paper';
 
 export interface Approval {
@@ -9,4 +9,5 @@ export interface Approval {
   paperId?: string;
   paper?: Paper;
   type?: PaperType;
+  status?: ApprovalStatus;
 }

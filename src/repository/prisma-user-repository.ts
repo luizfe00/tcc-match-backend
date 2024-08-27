@@ -25,7 +25,6 @@ export class PrismaUserRepository implements UserRepository {
         enrollment: user?.enrollment,
         name: user?.name,
         role: user?.role,
-        vacancies: user?.vacancies,
       },
     });
   }

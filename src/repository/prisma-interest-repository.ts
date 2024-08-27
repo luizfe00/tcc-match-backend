@@ -80,29 +80,4 @@ export class PrismaInterestRepository implements InterestRepository {
       },
     });
   }
-
-  async getBiData(): Promise<InterestBI> {
-    const interestData = await prismaClient.interest.groupBy({
-      by: ['approved'],
-      _count: {
-        _all: true,
-      },
-    });
-
-    let interestsCount = 0;
-    let interestsApprovedCount = 0;
-
-    interestData.forEach((data) => {
-      const { approved, _count } = data;
-      interestsCount += _count._all;
-      if (approved) {
-        interestsApprovedCount += _count._all;
-      }
-    });
-
-    return {
-      interestsApprovedCount,
-      interestsCount,
-    };
-  }
 }

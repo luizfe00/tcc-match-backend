@@ -8,5 +8,4 @@ export interface PaperRepository {
   delete(id: string): Promise<void>;
   findByThemeId(id: string): Promise<Paper>;
   findById(id: string): Promise<Paper>;
-  getPaperData(): Promise<PaperPerMonthQuery[]>;
 }

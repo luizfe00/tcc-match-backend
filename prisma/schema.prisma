@@ -19,13 +19,14 @@ model User {
   name String
   email String @unique
   enrollment String @unique
-  vacancies Int?
   role Role
+  professorActive Boolean @default(true)
 
   papers Paper[]
   orienteePaper Paper? @relation(name: "orientee_paper")
   themes Theme[]
   interests Interest[]
+  categories Categories[]
 }
 
 model Theme {
@@ -39,6 +40,7 @@ model Theme {
   paper Paper?
   interests Interest[]
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  categories Categories[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,23 +63,25 @@ model Interest {
 
 model Paper {
   id String @id @default(uuid())
-  documentUrl String?
+  ptccDocumentUrl String?
+  tccDocumentUrl String?
   type PaperType @default(PTCC)
+  status PaperStatus @default(PENDING)
 
   studentId String @unique
   professorId String
   themeId String @unique
-  
+  approvals Approval[]
   
   theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
   orientee User @relation(fields: [studentId], references: [id], onDelete: Cascade, name: "orientee_paper")
   advisor User @relation(fields: [professorId], references: [id], onDelete: Cascade)
   stages Stage[]
-  approvals Approval[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime? 
+  completedAt DateTime?
 }
 
 model Stage {
@@ -100,12 +104,22 @@ model Approval {
   approval Boolean?
   response String?
   type PaperType @default(PTCC)
+  status ApprovalStatus @default(PENDING)
 
   paperId String
   paper Paper @relation(fields: [paperId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Categories {
+  id String @id @default(uuid())
+  name String @unique
+  description String?
+
+  themes Theme[]
+  users User[]
 }
 
 enum Role {
@@ -117,4 +131,17 @@ enum Role {
 enum PaperType {
   PTCC
   TCC
+}
+
+enum PaperStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

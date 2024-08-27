@@ -2,13 +2,12 @@ import { PaperPayload, Paper } from '@/models/paper';
 import { PaperRepository } from '@/usecases/ports/paper-repository';
 import prismaClient from './prisma-client';
 import { PaperPerMonthQuery } from '@/interfaces/BI';
-import { subMonths } from 'date-fns';
 
 export class PrismaPaperRepository implements PaperRepository {
   async add(paper: PaperPayload): Promise<Paper> {
     return await prismaClient.paper.create({
       data: {
-        documentUrl: paper?.documentUrl,
+        ptccDocumentUrl: paper?.documentUrl,
         theme: {
           connect: {
             id: paper.themeId,
@@ -33,9 +32,10 @@ export class PrismaPaperRepository implements PaperRepository {
       where: {
         id: paper.id,
       },
-      data: {
-        documentUrl: paper?.documentUrl,
-      },
+      data:
+        paper.type === 'PTCC'
+          ? { ptccDocumentUrl: paper.documentUrl }
+          : { tccDocumentUrl: paper.documentUrl },
     });
   }
 
@@ -82,27 +82,27 @@ export class PrismaPaperRepository implements PaperRepository {
     });
   }
 
-  async getPaperData(): Promise<PaperPerMonthQuery[]> {
-    const sixMonthsAgo = subMonths(new Date(), 5); // Start from 5 months ago to cover the last 6 months
+  // async getPaperData(): Promise<PaperPerMonthQuery[]> {
+  //   const sixMonthsAgo = subMonths(new Date(), 5); // Start from 5 months ago to cover the last 6 months
 
-    const papersPerMonth = await prismaClient.$queryRaw<PaperPerMonthQuery[]>`
-      SELECT
-        EXTRACT(YEAR FROM p."createdAt") AS year,
-        EXTRACT(MONTH FROM p."createdAt") AS month,
-        COUNT(p.id) AS "totalPapers",
-        SUM(CASE WHEN p."type" = 'PTCC' THEN 1 ELSE 0 END) AS "ptccCount",
-        SUM(CASE WHEN p."type" = 'PTCC' AND a."approval" = true THEN 1 ELSE 0 END) AS "ptccApprovedCount",
-        SUM(CASE WHEN p."type" = 'TCC' THEN 1 ELSE 0 END) AS "tccCount",
-        SUM(CASE WHEN p."type" = 'TCC' AND a."approval" = true THEN 1 ELSE 0 END) AS "tccApprovedCount"
-      FROM "Paper" p
-      LEFT JOIN "Approval" a ON a."paperId" = p."id"
-      WHERE p."createdAt" >= ${sixMonthsAgo}
-      GROUP BY year, month
-      ORDER BY year ASC, month ASC;
-  `;
+  //   const papersPerMonth = await prismaClient.$queryRaw<PaperPerMonthQuery[]>`
+  //     SELECT
+  //       EXTRACT(YEAR FROM p."createdAt") AS year,
+  //       EXTRACT(MONTH FROM p."createdAt") AS month,
+  //       COUNT(p.id) AS "totalPapers",
+  //       SUM(CASE WHEN p."type" = 'PTCC' THEN 1 ELSE 0 END) AS "ptccCount",
+  //       SUM(CASE WHEN p."type" = 'PTCC' AND a."approval" = true THEN 1 ELSE 0 END) AS "ptccApprovedCount",
+  //       SUM(CASE WHEN p."type" = 'TCC' THEN 1 ELSE 0 END) AS "tccCount",
+  //       SUM(CASE WHEN p."type" = 'TCC' AND a."approval" = true THEN 1 ELSE 0 END) AS "tccApprovedCount"
+  //     FROM "Paper" p
+  //     LEFT JOIN "Approval" a ON a."paperId" = p."id"
+  //     WHERE p."createdAt" >= ${sixMonthsAgo}
+  //     GROUP BY year, month
+  //     ORDER BY year ASC, month ASC;
+  // `;
 
-    return handleBigIntFields(papersPerMonth);
-  }
+  //   return handleBigIntFields(papersPerMonth);
+  // }
 }
 
 function handleBigIntFields(data: PaperPerMonthQuery[]): PaperPerMonthQuery[] {

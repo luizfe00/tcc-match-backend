@@ -13,6 +13,7 @@ export class SignInController implements Controller {
         statusCode: 200,
       };
     } catch (error) {
+      console.log('error', error);
       const entityNonExistent = error.constructor.name === RequestErrorNames.EXISTING_ENTITY;
       const userUnauthorized = error.constructor.name === RequestErrorNames.UNAUTHORIZED;
 

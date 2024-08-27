@@ -1,35 +1,21 @@
-import { DashboardBI } from '@/interfaces/BI';
-import { InterestRepository } from './ports/interest-repository';
-import { PaperRepository } from './ports/paper-repository';
-import { StageRepostiory } from './ports/stage-repository';
-import { ThemeRepository } from './ports/theme-repository';
+import { DashboardBI, DashboardBIQuery } from '@/interfaces/BI';
 import { UseCase } from './ports/use-case';
 import { UserSignIn } from '@/interfaces/user';
 import { BadRequestError } from './errors';
+import { BIRepository } from './ports/bi-repository';
+import { subMonths } from 'date-fns';
 
 export class GetBIData implements UseCase {
-  constructor(
-    private readonly paperRepository: PaperRepository,
-    private readonly themeRepository: ThemeRepository,
-    private readonly interestRepository: InterestRepository,
-    private readonly stageRepository: StageRepostiory
-  ) {}
+  constructor(private readonly biRepository: BIRepository) {}
 
-  async perform(user: UserSignIn): Promise<DashboardBI> {
+  async perform(payload: DashboardBIQuery, user: UserSignIn): Promise<DashboardBI> {
     if (user.role !== 'COORDINATOR') {
       throw new BadRequestError('User cannot access this info.');
     }
 
-    const paperBIData = await this.paperRepository.getPaperData();
-    const themeBIData = await this.themeRepository.getThemeCount();
-    const interestBIData = await this.interestRepository.getBiData();
-    const stageBIData = await this.stageRepository.getBIData();
+    const startDate = payload.startDate ? new Date(payload.startDate) : subMonths(new Date(), 6);
+    const endDate = payload.endDate ? new Date(payload.endDate) : new Date();
 
-    return {
-      interests: interestBIData,
-      papers: paperBIData,
-      stages: stageBIData,
-      themes: themeBIData,
-    };
+    return await this.biRepository.getDashboardData(startDate, endDate, user);
   }
 }

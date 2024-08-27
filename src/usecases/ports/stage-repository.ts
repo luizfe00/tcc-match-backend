@@ -8,5 +8,4 @@ export interface StageRepostiory {
   update(stage: UpdateStagePayload): Promise<void>;
   findById(id: string): Promise<Stage>;
   delete(id: string): Promise<void>;
-  getBIData(): Promise<StageBI>;
 }

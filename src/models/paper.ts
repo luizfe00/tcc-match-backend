@@ -1,4 +1,4 @@
-import { PaperType } from '@prisma/client';
+import { PaperStatus, PaperType } from '@prisma/client';
 import { User } from './user';
 import { Theme } from './theme';
 import { Approval } from './approval';
@@ -7,6 +7,7 @@ export interface Paper {
   id?: string;
   documentUrl?: string;
   type: PaperType;
+  status: PaperStatus;
   studentId?: string;
   professorId?: string;
   orientee?: User;

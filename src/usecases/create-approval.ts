@@ -35,6 +35,11 @@ export class CreateApproval implements UseCase {
       type: paper.type,
     };
 
-    return await this.approvalRepository.add(approvalPayload);
+    const createdApproval = await this.approvalRepository.add(approvalPayload);
+    await this.paperRepository.update({
+      ...paper,
+      status: 'PENDING',
+    });
+    return createdApproval;
   }
 }

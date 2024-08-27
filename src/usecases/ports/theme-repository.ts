@@ -1,6 +1,5 @@
 import { ThemeBI } from '@/interfaces/BI';
 import { Theme, ThemePayload } from '@/models/theme';
-import { Role } from '@prisma/client';
 
 export interface ThemeRepository {
   add(theme: ThemePayload): Promise<Theme>;
@@ -17,6 +16,4 @@ export interface ThemeRepository {
   listAllStudents(): Promise<Theme[]>;
   listAllProfessors(): Promise<Theme[]>;
   listDeletedByUserId(id: string): Promise<Theme[]>;
-
-  getThemeCount(): Promise<ThemeBI>;
 }

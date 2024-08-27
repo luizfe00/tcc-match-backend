@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { UseCase } from './ports/use-case';
 import { EurekaService } from '@/external/EurekaService';
 import { BadRequestError } from './errors';
-import { CreateUser } from '@/models/user';
+import { CreateUser, User } from '@/models/user';
 import { UserSignIn } from '@/interfaces/user';
 import { UserRepository } from './ports/user-repository';
 
@@ -12,38 +12,43 @@ type TokenizedResponse = { token: string } & UserSignIn;
 type SignInResponse = Promise<TokenizedResponse>;
 
 export class SignIn implements UseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly eurekaService: EurekaService,
+    private readonly jwtSecret: string
+  ) {}
 
   async perform({ username, password }: { username: string; password: string }): SignInResponse {
-    const eurekaService = new EurekaService();
-    const { token } = await eurekaService.tokens(username, password);
-    if (!token) throw new BadRequestError('Failed credentials');
-    const profile = await eurekaService.profile(token);
-    let role: Role = Role.TEACHER;
-    if (profile.attributes.type === 'Aluno') {
-      role = Role.STUDENT;
-    }
+    const token = await this.authenticateWithEureka(username, password);
+    const profile = await this.eurekaService.profile(token);
+    const userData = this.createUserData(profile);
+    const user = await this.findOrCreateUser(userData);
+    return this.generateSignInResponse(user);
+  }
 
-    const userData: CreateUser = {
+  private async authenticateWithEureka(username: string, password: string): Promise<string> {
+    const { token } = await this.eurekaService.tokens(username, password);
+    if (!token) throw new BadRequestError('Failed credentials');
+    return token;
+  }
+
+  private createUserData(profile: any): CreateUser {
+    return {
       email: profile.attributes.email,
       enrollment: profile.attributes.code,
       name: profile.name,
-      role,
+      role: profile.attributes.type === 'Aluno' ? Role.STUDENT : Role.TEACHER,
     };
+  }
 
-    // const foundUser = await this.userRepository.getUserByEnrollment(userData.enrollment);
-    // const foundUser = await this.userRepository.getUserByEnrollment('119210053');
-    const foundUser = await this.userRepository.getUserByEnrollment('119210054');
-    if (foundUser) {
-      const signInToken = jwt.sign(foundUser, 'secret');
-      return { ...foundUser, token: signInToken };
-    }
+  private async findOrCreateUser(userData: CreateUser): Promise<User> {
+    const foundUser = await this.userRepository.getUserByEnrollment('119210055');
+    if (foundUser) return foundUser;
+    return await this.userRepository.add(userData);
+  }
 
-    const createdUser = await this.userRepository.add(userData);
-    const tokenPayload: UserSignIn = {
-      ...createdUser,
-    };
-    const signInToken = jwt.sign(tokenPayload, 'secret');
-    return { ...createdUser, token: signInToken };
+  private generateSignInResponse(user: User): TokenizedResponse {
+    const signInToken = jwt.sign(user, this.jwtSecret);
+    return { ...user, token: signInToken };
   }
 }

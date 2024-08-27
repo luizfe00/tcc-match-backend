@@ -2,6 +2,7 @@ import { Role } from '@prisma/client';
 import { Theme } from './theme';
 import { Interest } from './interest';
 import { Paper } from './paper';
+import { Category } from './category';
 
 export interface User {
   id: string;
@@ -12,6 +13,7 @@ export interface User {
   vacancies?: number;
   themes?: Theme[];
   interests?: Interest[];
+  categories?: Category[];
 }
 
 export interface Student extends User {
