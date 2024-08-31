@@ -1,4 +1,12 @@
-import { DashboardBI, InterestBI, PaperBI, ThemeBI, CategoryBI } from '@/interfaces/BI';
+import {
+  DashboardBI,
+  InterestBI,
+  PaperBI,
+  ThemeBI,
+  CategoryBI,
+  ProfessorDashboardBI,
+  ProfessorInterestStatsQuery,
+} from '@/interfaces/BI';
 import { BIRepository } from '@/usecases/ports/bi-repository';
 import prismaClient from './prisma-client';
 import { Paper } from '@/models/paper';
@@ -8,6 +16,9 @@ import {
   getPaperPerMonthStats,
   getProfessorPaperBI,
 } from '@/utils/BiUtil';
+import { Theme } from '@/models/theme';
+import { Interest } from '@/models/interest';
+import { Category } from '@/models/category';
 
 export class PrismaBIRepository implements BIRepository {
   async getDashboardData(startDate: Date, endDate: Date): Promise<DashboardBI> {
@@ -151,6 +162,128 @@ export class PrismaBIRepository implements BIRepository {
         inactiveThemes,
       };
     });
+  }
+
+  async getProfessorDashboardData(
+    id: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<ProfessorDashboardBI> {
+    const professor = await prismaClient.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        categories: true,
+        interests: true,
+        papers: true,
+        themes: {
+          where: {
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
+            },
+          },
+          include: {
+            paper: true,
+            categories: true,
+          },
+        },
+      },
+    });
+
+    return {
+      professor,
+      categories: this.generateProfessorCategoryStats(
+        professor?.categories,
+        professor?.themes,
+        professor?.papers
+      ),
+      interests: this.generateProfessorInterestStats(professor.interests),
+      papers: this.generateProfessorPaperStats(professor.papers),
+      themes: this.generateProfessorThemeStats(professor.themes),
+    };
+  }
+
+  private generateProfessorCategoryStats(categories: Category[], themes: Theme[], papers: Paper[]) {
+    const categoriyStats = categories.map((category) => {
+      const categoryPapers = papers.filter((paper) =>
+        paper?.theme?.categories.some((c) => c.id === category.id)
+      );
+      const categoryThemes = themes.filter((theme) =>
+        theme?.categories.some((c) => c.id === category.id)
+      );
+      const categoryActiveThemes = categoryThemes.filter((theme) => !!theme.paper).length;
+      const categoryInactiveThemes = categoryThemes.length - categoryActiveThemes;
+      const categoryPtccPapers = categoryPapers.filter((paper) => paper.type === 'PTCC').length;
+      const categoryTccPapers = categoryPapers.filter((paper) => paper.type === 'TCC').length;
+      const categoryCompletedPapers = categoryPapers.filter(
+        (paper) => paper.status === 'COMPLETED'
+      ).length;
+      const categoryPendingPapers = categoryPapers.length - categoryCompletedPapers;
+
+      return {
+        name: category.name,
+        themeCount: categoryThemes.length,
+        paperCount: categoryPapers.length,
+        activeThemes: categoryActiveThemes,
+        inactiveThemes: categoryInactiveThemes,
+        ptccPapers: categoryPtccPapers,
+        tccPapers: categoryTccPapers,
+        completedPapers: categoryCompletedPapers,
+        pendingPapers: categoryPendingPapers,
+      };
+    });
+
+    return categoriyStats;
+  }
+
+  private generateProfessorThemeStats(themes: Theme[]) {
+    const totalThemes = themes.length;
+    const activeThemes = themes.filter((theme) => !!theme.paper).length;
+    const inactiveThemes = totalThemes - activeThemes;
+
+    return {
+      totalThemes,
+      activeThemes,
+      inactiveThemes,
+    };
+  }
+
+  private generateProfessorInterestStats(interests: Interest[]): ProfessorInterestStatsQuery {
+    const totalInterests = interests.length;
+    const approvedInterests = interests.filter((interest) => interest.approved).length;
+    const pendingInterests = totalInterests - approvedInterests;
+
+    return {
+      totalInterests,
+      approvedInterests,
+      pendingInterests,
+    };
+  }
+
+  private generateProfessorPaperStats(papers: Paper[]) {
+    const totalPapers = papers.length;
+    const approvedPapers = papers.filter((paper) => paper.status === 'APPROVED').length;
+    const ptccPapers = papers.filter((paper) => paper.type === 'PTCC').length;
+    const tccPapers = papers.filter((paper) => paper.type === 'TCC').length;
+    const pendingPapers = totalPapers - approvedPapers;
+    const ptccApprovedPapers = papers.filter(
+      (paper) => paper.type === 'PTCC' && paper.status === 'APPROVED'
+    ).length;
+    const tccApprovedPapers = papers.filter(
+      (paper) => paper.type === 'TCC' && paper.status === 'APPROVED'
+    ).length;
+
+    return {
+      totalPapers,
+      approvedPapers,
+      pendingPapers,
+      ptccPapers,
+      tccPapers,
+      ptccApprovedPapers,
+      tccApprovedPapers,
+    };
   }
 
   private async getInterestData(startDate: Date, endDate: Date): Promise<InterestBI> {

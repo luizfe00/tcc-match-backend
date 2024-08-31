@@ -27,6 +27,10 @@ model User {
   themes Theme[]
   interests Interest[]
   categories Categories[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model Theme {
@@ -54,8 +58,8 @@ model Interest {
   themeId String
   approved Boolean @default(false)
 
-  theme Theme @relation(fields: [themeId], references: [id])
-  owner User @relation(fields: [ownerId], references: [id])
+  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -107,7 +111,7 @@ model Approval {
   status ApprovalStatus @default(PENDING)
 
   paperId String
-  paper Paper @relation(fields: [paperId], references: [id])
+  paper Paper @relation(fields: [paperId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -120,6 +124,10 @@ model Categories {
 
   themes Theme[]
   users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 enum Role {

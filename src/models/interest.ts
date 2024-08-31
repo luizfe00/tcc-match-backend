@@ -6,6 +6,7 @@ export interface Interest {
   text: string;
   themeId: string;
   ownerId: string;
+  approved: boolean;
   theme?: Theme;
   owner?: User;
 }

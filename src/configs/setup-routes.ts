@@ -9,6 +9,7 @@ import { makeDeleteThemeController } from '@/factories/controllers/make-delete-t
 import { makeEditThemeController } from '@/factories/controllers/make-edit-theme-controller';
 import { makeGetBIDataController } from '@/factories/controllers/make-get-bi-data-controller';
 import { makeGetPaperController } from '@/factories/controllers/make-get-paper-controller';
+import { makeGetProfessorBiDataController } from '@/factories/controllers/make-get-professor-bi-data-controller';
 import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
 import { makeListDeletedThemesController } from '@/factories/controllers/make-list-deleted-themes-controller';
 import { makeListPaperStagesController } from '@/factories/controllers/make-list-paper-stages-controller';
@@ -62,6 +63,7 @@ export function setupRoutes(app: Express): void {
   updatePaperRoute(router);
   listDeletedThemesRoute(router);
   listPendingApprovalsRoute(router);
+  getProfessorBiDataRoute(router);
 }
 
 function createSignInRoute(router: Router) {
@@ -186,4 +188,8 @@ function listDeletedThemesRoute(router: Router) {
 
 function listPendingApprovalsRoute(router: Router) {
   router.get('/approval/pending', adaptRoute(makeListPendingApprovalsController()));
+}
+
+function getProfessorBiDataRoute(router: Router) {
+  router.get('/dashboard/professor/:id', adaptRoute(makeGetProfessorBiDataController()));
 }
