@@ -6,6 +6,8 @@ import {
   CategoryBI,
   ProfessorDashboardBI,
   ProfessorInterestStatsQuery,
+  ProfessorThemeStatsByMonthQuery,
+  ProfessorThemeStatsQuery,
 } from '@/interfaces/BI';
 import { BIRepository } from '@/usecases/ports/bi-repository';
 import prismaClient from './prisma-client';
@@ -238,7 +240,38 @@ export class PrismaBIRepository implements BIRepository {
     return categoriyStats;
   }
 
-  private generateProfessorThemeStats(themes: Theme[]) {
+  private generateProfessorThemeStats(themes: Theme[]): ProfessorThemeStatsQuery {
+    const groupedThemes = themes.reduce(
+      (acc, theme) => {
+        const createdMonth = theme.createdAt.toISOString().slice(0, 7); // YYYY-MM format
+        if (!acc[createdMonth]) {
+          acc[createdMonth] = {
+            active: {
+              completed: 0,
+              pending: 0,
+              rejected: 0,
+            },
+            inactive: 0,
+          };
+        }
+
+        if (theme.paper) {
+          if (theme.paper.status === 'COMPLETED') {
+            acc[createdMonth].active.completed++;
+          } else if (theme.paper.status === 'PENDING') {
+            acc[createdMonth].active.pending++;
+          } else if (theme.paper.status === 'REJECTED') {
+            acc[createdMonth].active.rejected++;
+          }
+        } else {
+          acc[createdMonth].inactive++;
+        }
+
+        return acc;
+      },
+      {} as Record<string, ProfessorThemeStatsByMonthQuery>
+    );
+
     const totalThemes = themes.length;
     const activeThemes = themes.filter((theme) => !!theme.paper).length;
     const inactiveThemes = totalThemes - activeThemes;
@@ -247,6 +280,7 @@ export class PrismaBIRepository implements BIRepository {
       totalThemes,
       activeThemes,
       inactiveThemes,
+      themesByMonth: groupedThemes,
     };
   }
 
