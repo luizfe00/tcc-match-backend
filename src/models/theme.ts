@@ -10,10 +10,10 @@ export interface Theme {
   ownerId: string;
   startDate: Date;
   endDate: Date;
-  paper?: Paper;
+  paper?: Partial<Paper>;
   interests?: Interest[];
   categories?: Category[];
-  owner?: User;
+  owner?: Partial<User>;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;

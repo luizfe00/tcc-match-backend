@@ -11,6 +11,8 @@ import { makeGetBIDataController } from '@/factories/controllers/make-get-bi-dat
 import { makeGetPaperController } from '@/factories/controllers/make-get-paper-controller';
 import { makeGetProfessorBiDataController } from '@/factories/controllers/make-get-professor-bi-data-controller';
 import { makeGetUserController } from '@/factories/controllers/make-get-user-controller';
+import { makeListAllPapersController } from '@/factories/controllers/make-list-all-papers-controller';
+import { makeListAllThemesController } from '@/factories/controllers/make-list-all-themes-controller';
 import { makeListDeletedThemesController } from '@/factories/controllers/make-list-deleted-themes-controller';
 import { makeListPaperStagesController } from '@/factories/controllers/make-list-paper-stages-controller';
 import { makeListPendingApprovalsController } from '@/factories/controllers/make-list-pending-approvals-controller';
@@ -46,6 +48,8 @@ export function setupRoutes(app: Express): void {
   listStudenThemesRoute(router);
   listProfessorThemesRoute(router);
   createInterest(router);
+  listAllThemesRoute(router);
+  listAllPapersRoute(router);
   deleteInterest(router);
   listUserInterest(router);
   listThemeInterest(router);
@@ -176,6 +180,14 @@ function updateApprovalRoute(router: Router) {
     adaptValidator(makeUpdateApprovalValidator()),
     adaptRoute(makeUpdateApprovalController())
   );
+}
+
+function listAllThemesRoute(router: Router) {
+  router.get('/themes/all', adaptRoute(makeListAllThemesController()));
+}
+
+function listAllPapersRoute(router: Router) {
+  router.get('/papers/all', adaptRoute(makeListAllPapersController()));
 }
 
 function updatePaperRoute(router: Router) {

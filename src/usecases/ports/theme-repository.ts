@@ -11,6 +11,7 @@ export interface ThemeRepository {
   findById(id: string): Promise<Theme | undefined>;
   findByUser(userId: string, label: string): Promise<Theme | undefined>;
   findAllByUser(userId: string): Promise<Theme[]>;
+  findAll(): Promise<Theme[]>;
 
   list(): Promise<Theme[]>;
   listAllStudents(): Promise<Theme[]>;

@@ -2,7 +2,6 @@ import { Theme } from '@/models/theme';
 import { ThemeRepository } from '@/usecases/ports/theme-repository';
 import prismaClient from './prisma-client';
 import { Role } from '@prisma/client';
-import { ThemeBI } from '@/interfaces/BI';
 
 export class PrismaThemeRepository implements ThemeRepository {
   async add(theme: Theme): Promise<Theme> {
@@ -151,6 +150,35 @@ export class PrismaThemeRepository implements ThemeRepository {
       },
       include: {
         owner: true,
+      },
+    });
+  }
+
+  async findAll(): Promise<Theme[]> {
+    return await prismaClient.theme.findMany({
+      orderBy: [
+        {
+          deletedAt: 'asc',
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
+      include: {
+        owner: {
+          select: {
+            email: true,
+            id: true,
+            name: true,
+          },
+        },
+        paper: {
+          select: {
+            id: true,
+            status: true,
+            type: true,
+          },
+        },
       },
     });
   }

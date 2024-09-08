@@ -10,9 +10,9 @@ export interface Paper {
   status: PaperStatus;
   studentId?: string;
   professorId?: string;
-  orientee?: User;
-  advisor?: User;
-  theme?: Theme;
+  orientee?: Partial<User>;
+  advisor?: Partial<User>;
+  theme?: Partial<Theme>;
   approvals?: Approval[];
   createdAt: Date;
   updatedAt: Date;

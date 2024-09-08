@@ -1,7 +1,6 @@
 import { PaperPayload, Paper } from '@/models/paper';
 import { PaperRepository } from '@/usecases/ports/paper-repository';
 import prismaClient from './prisma-client';
-import { PaperPerMonthQuery } from '@/interfaces/BI';
 
 export class PrismaPaperRepository implements PaperRepository {
   async add(paper: PaperPayload): Promise<Paper> {
@@ -82,36 +81,49 @@ export class PrismaPaperRepository implements PaperRepository {
     });
   }
 
-  // async getPaperData(): Promise<PaperPerMonthQuery[]> {
-  //   const sixMonthsAgo = subMonths(new Date(), 5); // Start from 5 months ago to cover the last 6 months
-
-  //   const papersPerMonth = await prismaClient.$queryRaw<PaperPerMonthQuery[]>`
-  //     SELECT
-  //       EXTRACT(YEAR FROM p."createdAt") AS year,
-  //       EXTRACT(MONTH FROM p."createdAt") AS month,
-  //       COUNT(p.id) AS "totalPapers",
-  //       SUM(CASE WHEN p."type" = 'PTCC' THEN 1 ELSE 0 END) AS "ptccCount",
-  //       SUM(CASE WHEN p."type" = 'PTCC' AND a."approval" = true THEN 1 ELSE 0 END) AS "ptccApprovedCount",
-  //       SUM(CASE WHEN p."type" = 'TCC' THEN 1 ELSE 0 END) AS "tccCount",
-  //       SUM(CASE WHEN p."type" = 'TCC' AND a."approval" = true THEN 1 ELSE 0 END) AS "tccApprovedCount"
-  //     FROM "Paper" p
-  //     LEFT JOIN "Approval" a ON a."paperId" = p."id"
-  //     WHERE p."createdAt" >= ${sixMonthsAgo}
-  //     GROUP BY year, month
-  //     ORDER BY year ASC, month ASC;
-  // `;
-
-  //   return handleBigIntFields(papersPerMonth);
-  // }
-}
-
-function handleBigIntFields(data: PaperPerMonthQuery[]): PaperPerMonthQuery[] {
-  return data.map((item) => ({
-    ...item,
-    totalPapers: Number(item.totalPapers),
-    ptccCount: Number(item.ptccCount),
-    ptccApprovedCount: Number(item.ptccApprovedCount),
-    tccCount: Number(item.tccCount),
-    tccApprovedCount: Number(item.tccApprovedCount),
-  }));
+  async findAll(): Promise<Paper[]> {
+    return await prismaClient.paper.findMany({
+      orderBy: [
+        {
+          deletedAt: 'asc',
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
+      include: {
+        advisor: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        orientee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        theme: {
+          select: {
+            categories: true,
+            id: true,
+            label: true,
+            summary: true,
+            endDate: true,
+            startDate: true,
+            owner: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
