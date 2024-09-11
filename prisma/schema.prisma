@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  seed    = "prisma/seed/seed.ts"
 }
 
 datasource db {
@@ -13,62 +14,142 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-model Student {
+model User {
   id String @id @default(uuid())
   name String
   email String @unique
   enrollment String @unique
-
-  paper Paper?
-  themes Theme[]
-}
-
-model Professor {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  enrollment String @unique
-  classes String
-  vacancies Int
-  role Role @default(TEACHER)
+  role Role
+  professorActive Boolean @default(true)
 
   papers Paper[]
+  orienteePaper Paper? @relation(name: "orientee_paper")
   themes Theme[]
+  interests Interest[]
+  categories Categories[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model Theme {
   id String @id @default(uuid())
   label String @unique
-  studentId String?
-  professorId String?
+  summary String
+  ownerId String
+  startDate DateTime @default(now())
+  duration Int
 
-  student Student? @relation(fields: [studentId], references: [id])
-  professor Professor? @relation(fields: [professorId], references: [id])
-  papers Paper[]
+  paper Paper?
+  interests Interest[]
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  categories Categories[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime? 
+}
+
+model Interest {
+  id String @id @default(uuid())
+  text String
+  ownerId String
+  themeId String
+  approved Boolean @default(false)
+
+  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Paper {
   id String @id @default(uuid())
+  ptccDocumentUrl String?
+  tccDocumentUrl String?
+  type PaperType @default(PTCC)
+  status PaperStatus @default(PENDING)
+
   studentId String @unique
   professorId String
-  themeId String
-  approved Boolean @default(false)
+  themeId String @unique
+  approvals Approval[]
   
-  theme Theme @relation(fields: [themeId], references: [id])
-  student Student @relation(fields: [studentId], references: [id])
-  professor Professor @relation(fields: [professorId], references: [id])
+  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+  orientee User @relation(fields: [studentId], references: [id], onDelete: Cascade, name: "orientee_paper")
+  advisor User @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  stages Stage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime? 
+  completedAt DateTime?
+}
+
+model Stage {
+  id String @id @default(uuid())
+  label String
+  paperId String 
+  viewed Boolean @default(false)
+  feedback String?
+  message String?
+
+  
+  paper Paper @relation(fields: [paperId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Approval {
+  id String @id @default(uuid())
+  approval Boolean?
+  response String?
+  type PaperType @default(PTCC)
+  status ApprovalStatus @default(PENDING)
+
+  paperId String
+  paper Paper @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Categories {
+  id String @id @default(uuid())
+  name String @unique
+  description String?
+
+  themes Theme[]
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 enum Role {
+  STUDENT
   TEACHER
   COORDINATOR
+}
+
+enum PaperType {
+  PTCC
+  TCC
+}
+
+enum PaperStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

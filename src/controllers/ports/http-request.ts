@@ -1,5 +1,6 @@
-export interface HttpRequest {
-  token?: string;
+import { Request } from 'express';
+
+export interface HttpRequest extends Partial<Request> {
   body: any;
-  params?: Record<string, any>;
+  token?: string;
 }
