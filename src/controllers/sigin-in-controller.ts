@@ -18,7 +18,7 @@ export class SignInController implements Controller {
 
       if (entityNonExistent || userUnauthorized) {
         return {
-          statusCode: error.httpStatus,
+          statusCode: 444,
           body: {
             errorType: error.constructor.name,
             message: error.message,
