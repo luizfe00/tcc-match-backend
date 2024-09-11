@@ -13,12 +13,12 @@ declare global {
 }
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  if (req.path.indexOf('/api/signin') !== -1) {
+  if (PUBLIC_ROUTES.includes(req.path)) {
     next();
     return;
   }
   const token = req.headers.authorization;
-  if (!token) return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Token is required' });
+  if (!token) return res.status(499).json({ message: 'Token is required' });
   const tokenValue = token.split(' ')[1];
   try {
     verify(tokenValue, 'secret');
@@ -26,6 +26,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     req.user = user as UserSignIn;
     next();
   } catch (error) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Invalid token' });
+    return res.status(501).json({ message: 'Invalid token' });
   }
 };
