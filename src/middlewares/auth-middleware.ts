@@ -13,7 +13,7 @@ declare global {
 }
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  if (PUBLIC_ROUTES.includes(req.path)) {
+  if (req.path.indexOf('/api/signin') !== -1) {
     next();
     return;
   }
