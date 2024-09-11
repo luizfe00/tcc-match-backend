@@ -8,7 +8,7 @@ export const makeCreateThemeValidator = (): Validator => {
     summary: Joi.string().min(20).required(),
     label: Joi.string().min(5).required(),
     startDate: Joi.date().greater('now').iso().required(),
-    endDate: Joi.date().min(Joi.ref('startDate')).iso().required(),
+    duration: Joi.number().required().min(30).max(180),
   });
 
   return new PayloadValidation<Theme>(joiSchema);

@@ -112,7 +112,7 @@ export class PrismaPaperRepository implements PaperRepository {
             id: true,
             label: true,
             summary: true,
-            endDate: true,
+            duration: true,
             startDate: true,
             owner: {
               select: {

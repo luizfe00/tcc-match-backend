@@ -20,7 +20,6 @@ export class GetProfessorBIDataController implements Controller {
         body: data,
       };
     } catch (error) {
-      console.log(error);
       const badRequest = error.constructor.name === RequestErrorNames.BAD_REQUEST;
       if (badRequest) {
         return {

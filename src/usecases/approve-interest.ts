@@ -6,6 +6,7 @@ import { UserSignIn } from '@/interfaces/user';
 import { PaperRepository } from './ports/paper-repository';
 import { UserRepository } from './ports/user-repository';
 import { InterestRepository } from './ports/interest-repository';
+import { Role } from '@prisma/client';
 
 export class ApproveInterest implements UseCase {
   constructor(
@@ -39,6 +40,10 @@ export class ApproveInterest implements UseCase {
 
     await this.interestRepository.approve(ptcc.interestId);
     await this.themeRepository.softDelete(ptcc.themeId);
+    if (user.role === Role.STUDENT) {
+      await this.interestRepository.deleteAllByThemeId(student.themes?.[0]?.id);
+      await this.interestRepository.deleteAllByUserId(student.id);
+    }
     return await this.paperRepository.add(ptcc);
   }
 }

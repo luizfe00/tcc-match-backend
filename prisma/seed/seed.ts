@@ -89,7 +89,7 @@ async function seed() {
       label: 'Machine Learning',
       summary: 'Exploring various ML algorithms',
       ownerId: massoni.id,
-      endDate: new Date('2024-12-31'),
+      duration: 42,
     },
   });
 
@@ -98,7 +98,7 @@ async function seed() {
       label: 'Web Development',
       summary: 'Modern web technologies and frameworks',
       ownerId: massoni.id,
-      endDate: new Date('2024-10-31'),
+      duration: 62,
     },
   });
 
@@ -107,7 +107,7 @@ async function seed() {
       label: 'Cybersecurity',
       summary: 'Network security and ethical hacking',
       ownerId: dalton.id,
-      endDate: new Date('2025-03-31'),
+      duration: 142,
     },
   });
 
@@ -116,7 +116,7 @@ async function seed() {
       label: 'Data Science',
       summary: 'Big data analysis and visualization',
       ownerId: massoni.id,
-      endDate: new Date('2024-11-30'),
+      duration: 30,
     },
   });
 
@@ -125,7 +125,7 @@ async function seed() {
       label: 'Internet of Things',
       summary: 'Connected devices and smart systems',
       ownerId: dalton.id,
-      endDate: new Date('2025-01-31'),
+      duration: 82,
     },
   });
 
@@ -134,7 +134,7 @@ async function seed() {
       label: 'Quantum Computing',
       summary: 'Exploring quantum algorithms and applications',
       ownerId: alice.id,
-      endDate: new Date('2025-06-30'),
+      duration: 92,
     },
   });
 
@@ -143,7 +143,7 @@ async function seed() {
       label: 'Blockchain Technology',
       summary: 'Decentralized systems and cryptocurrencies',
       ownerId: bob.id,
-      endDate: new Date('2025-05-31'),
+      duration: 60,
     },
   });
 
@@ -152,7 +152,7 @@ async function seed() {
       label: 'Augmented Reality',
       summary: 'Developing AR applications and experiences',
       ownerId: alice.id,
-      endDate: new Date('2025-04-30'),
+      duration: 92,
     },
   });
 
@@ -161,7 +161,7 @@ async function seed() {
       label: 'Green Computing',
       summary: 'Sustainable and energy-efficient computing practices',
       ownerId: bob.id,
-      endDate: new Date('2025-07-31'),
+      duration: 122,
     },
   });
 

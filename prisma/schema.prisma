@@ -39,7 +39,7 @@ model Theme {
   summary String
   ownerId String
   startDate DateTime @default(now())
-  endDate DateTime @default(now())
+  duration Int
 
   paper Paper?
   interests Interest[]

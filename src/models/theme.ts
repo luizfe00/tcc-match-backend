@@ -9,7 +9,7 @@ export interface Theme {
   summary: string;
   ownerId: string;
   startDate: Date;
-  endDate: Date;
+  duration: number;
   paper?: Partial<Paper>;
   interests?: Interest[];
   categories?: Category[];
@@ -25,5 +25,4 @@ export interface ThemePayload {
   duration: number;
   ownerId: string;
   startDate: Date;
-  endDate: Date;
 }

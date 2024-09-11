@@ -10,7 +10,7 @@ export class PrismaThemeRepository implements ThemeRepository {
         label: theme.label,
         summary: theme.summary,
         startDate: theme.startDate,
-        endDate: theme.endDate,
+        duration: theme.duration,
         owner: {
           connect: {
             id: theme.ownerId,
@@ -47,7 +47,7 @@ export class PrismaThemeRepository implements ThemeRepository {
         label: theme?.label,
         summary: theme?.summary,
         startDate: theme?.startDate,
-        endDate: theme?.endDate,
+        duration: theme?.duration,
         categories: {
           set:
             theme.categories?.map((category) => ({

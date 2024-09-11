@@ -10,4 +10,6 @@ export interface InterestRepository {
   findAllByThemeId(id: string): Promise<Interest[]>;
   findByThemeIdAndUser(themeId: string, user: UserSignIn): Promise<Interest>;
   delete(id: string): Promise<void>;
+  deleteAllByUserId(id: string): Promise<void>;
+  deleteAllByThemeId(id: string): Promise<void>;
 }

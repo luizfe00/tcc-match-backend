@@ -80,4 +80,20 @@ export class PrismaInterestRepository implements InterestRepository {
       },
     });
   }
+
+  async deleteAllByUserId(id: string): Promise<void> {
+    await prismaClient.interest.deleteMany({
+      where: {
+        ownerId: id,
+      },
+    });
+  }
+
+  async deleteAllByThemeId(id: string): Promise<void> {
+    await prismaClient.interest.deleteMany({
+      where: {
+        themeId: id,
+      },
+    });
+  }
 }
