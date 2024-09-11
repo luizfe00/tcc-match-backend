@@ -42,7 +42,7 @@ export class SignIn implements UseCase {
   }
 
   private async findOrCreateUser(userData: CreateUser): Promise<User> {
-    const foundUser = await this.userRepository.getUserByEnrollment('119210053');
+    const foundUser = await this.userRepository.getUserByEnrollment(userData.enrollment);
     if (foundUser) return foundUser;
     return await this.userRepository.add(userData);
   }
