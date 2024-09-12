@@ -1,1 +1,1 @@
-export const PUBLIC_ROUTES = ['/api/signin'];
+export const PUBLIC_ROUTES = ['/api/signin', '/health'];

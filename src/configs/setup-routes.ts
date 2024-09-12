@@ -68,6 +68,13 @@ export function setupRoutes(app: Express): void {
   listDeletedThemesRoute(router);
   listPendingApprovalsRoute(router);
   getProfessorBiDataRoute(router);
+  healthCheckRoute(router);
+}
+
+function healthCheckRoute(router: Router) {
+  router.get('/health', (req, res) => {
+    res.status(200).json({ message: 'Server is running' });
+  });
 }
 
 function createSignInRoute(router: Router) {
