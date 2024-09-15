@@ -117,7 +117,7 @@ export type ProfessorCategoryStatsQuery = {
   ptccPapers: number;
   tccPapers: number;
   completedPapers: number;
-  pendingPapers: number;
+  ongoingPapers: number;
 };
 
 export type ProfessorInterestStatsQuery = {
@@ -129,7 +129,7 @@ export type ProfessorInterestStatsQuery = {
 export type ProfessorPaperStatsQuery = {
   totalPapers: number;
   approvedPapers: number;
-  pendingPapers: number;
+  ongoingPapers: number;
   ptccPapers: number;
   tccPapers: number;
   ptccApprovedPapers: number;

@@ -43,6 +43,7 @@ export class ApproveInterest implements UseCase {
     if (user.role === Role.STUDENT) {
       await this.interestRepository.deleteAllByThemeId(student.themes?.[0]?.id);
       await this.interestRepository.deleteAllByUserId(student.id);
+      await this.themeRepository.delete(student?.themes?.[0]?.id);
     }
     return await this.paperRepository.add(ptcc);
   }

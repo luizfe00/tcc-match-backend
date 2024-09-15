@@ -7,7 +7,7 @@ export const countPapersByType = (papers: Paper[], type: PaperType) => {
 };
 
 export const countApprovedPapersByType = (papers: Paper[], type: PaperType) => {
-  return papers.filter((paper) => paper.type === type && paper.status === 'APPROVED').length;
+  return papers.filter((paper) => paper.type === type && paper.status === 'COMPLETED').length;
 };
 
 const createInitialMonthStat = (date: Date): PaperPerMonthQuery => {
@@ -32,12 +32,12 @@ export const getPaperPerMonthStats = (papers: Paper[]) => {
     stat.totalPapers++;
     if (paper.type === 'PTCC') {
       stat.ptccCount++;
-      if (paper.status === 'APPROVED') {
+      if (paper.status === 'COMPLETED') {
         stat.ptccApprovedCount++;
       }
     } else {
       stat.tccCount++;
-      if (paper.status === 'APPROVED') {
+      if (paper.status === 'COMPLETED') {
         stat.tccApprovedCount++;
       }
     }
@@ -69,12 +69,12 @@ export const getProfessorPaperBI = (papers: Paper[]) => {
     stat.totalPapers++;
     if (paper.type === 'PTCC') {
       stat.ptccCount++;
-      if (paper.status === 'APPROVED') {
+      if (paper.status === 'COMPLETED') {
         stat.ptccApprovedCount++;
       }
     } else {
       stat.tccCount++;
-      if (paper.status === 'APPROVED') {
+      if (paper.status === 'COMPLETED') {
         stat.tccApprovedCount++;
       }
     }

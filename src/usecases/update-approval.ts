@@ -41,7 +41,7 @@ export class UpdateApproval implements UseCase {
     if (approval.approval) {
       if (paper.type === 'PTCC') {
         updatedPaper.type = 'TCC';
-        updatedPaper.status = 'APPROVED';
+        updatedPaper.status = 'ONGOING';
       } else if (paper.type === 'TCC') {
         updatedPaper.status = 'COMPLETED';
       }

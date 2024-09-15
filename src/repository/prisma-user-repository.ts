@@ -34,6 +34,9 @@ export class PrismaUserRepository implements UserRepository {
       where: {
         id,
       },
+      include: {
+        themes: true,
+      },
     });
   }
 

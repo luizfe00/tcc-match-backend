@@ -222,7 +222,7 @@ export class PrismaBIRepository implements BIRepository {
       const categoryCompletedPapers = categoryPapers.filter(
         (paper) => paper.status === 'COMPLETED'
       ).length;
-      const categoryPendingPapers = categoryPapers.length - categoryCompletedPapers;
+      const categoryOngoingPapers = categoryPapers.length - categoryCompletedPapers;
 
       return {
         name: category.name,
@@ -233,7 +233,7 @@ export class PrismaBIRepository implements BIRepository {
         ptccPapers: categoryPtccPapers,
         tccPapers: categoryTccPapers,
         completedPapers: categoryCompletedPapers,
-        pendingPapers: categoryPendingPapers,
+        ongoingPapers: categoryOngoingPapers,
       };
     });
 
@@ -258,7 +258,7 @@ export class PrismaBIRepository implements BIRepository {
         if (theme.paper) {
           if (theme.paper.status === 'COMPLETED') {
             acc[createdMonth].active.completed++;
-          } else if (theme.paper.status === 'PENDING') {
+          } else if (theme.paper.status === 'ONGOING') {
             acc[createdMonth].active.pending++;
           } else if (theme.paper.status === 'REJECTED') {
             acc[createdMonth].active.rejected++;
@@ -298,21 +298,21 @@ export class PrismaBIRepository implements BIRepository {
 
   private generateProfessorPaperStats(papers: Paper[]) {
     const totalPapers = papers.length;
-    const approvedPapers = papers.filter((paper) => paper.status === 'APPROVED').length;
+    const approvedPapers = papers.filter((paper) => paper.status === 'COMPLETED').length;
     const ptccPapers = papers.filter((paper) => paper.type === 'PTCC').length;
     const tccPapers = papers.filter((paper) => paper.type === 'TCC').length;
-    const pendingPapers = totalPapers - approvedPapers;
+    const ongoingPapers = papers.filter((paper) => paper.status === 'ONGOING').length;
     const ptccApprovedPapers = papers.filter(
-      (paper) => paper.type === 'PTCC' && paper.status === 'APPROVED'
+      (paper) => paper.type === 'PTCC' && paper.status === 'COMPLETED'
     ).length;
     const tccApprovedPapers = papers.filter(
-      (paper) => paper.type === 'TCC' && paper.status === 'APPROVED'
+      (paper) => paper.type === 'TCC' && paper.status === 'COMPLETED'
     ).length;
 
     return {
       totalPapers,
       approvedPapers,
-      pendingPapers,
+      ongoingPapers,
       ptccPapers,
       tccPapers,
       ptccApprovedPapers,

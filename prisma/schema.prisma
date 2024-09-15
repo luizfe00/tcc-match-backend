@@ -134,6 +134,7 @@ enum Role {
   STUDENT
   TEACHER
   COORDINATOR
+  ADMIN
 }
 
 enum PaperType {
@@ -143,7 +144,7 @@ enum PaperType {
 
 enum PaperStatus {
   PENDING
-  APPROVED
+  ONGOING
   REJECTED
   COMPLETED
 }

@@ -89,6 +89,7 @@ async function seed() {
       label: 'Machine Learning',
       summary: 'Exploring various ML algorithms',
       ownerId: massoni.id,
+      startDate: new Date('2024-08-02'),
       duration: 42,
     },
   });

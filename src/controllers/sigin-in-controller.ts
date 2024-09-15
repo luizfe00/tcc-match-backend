@@ -13,6 +13,7 @@ export class SignInController implements Controller {
         statusCode: 200,
       };
     } catch (error) {
+      console.log(error);
       const entityNonExistent = error.constructor.name === RequestErrorNames.EXISTING_ENTITY;
       const userUnauthorized = error.constructor.name === RequestErrorNames.UNAUTHORIZED;
 
@@ -29,9 +30,9 @@ export class SignInController implements Controller {
       return {
         body: {
           errorType: error.code,
-          message: error.response.data.message,
+          message: error.response?.data?.message,
         },
-        statusCode: error.response.status,
+        statusCode: error.response?.status,
       };
     }
   }

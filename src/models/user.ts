@@ -14,6 +14,7 @@ export interface User {
   themes?: Theme[];
   interests?: Interest[];
   categories?: Category[];
+  orienteePaper?: Paper;
 }
 
 export interface Student extends User {
