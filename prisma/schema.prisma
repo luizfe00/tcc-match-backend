@@ -130,6 +130,18 @@ model Categories {
   deletedAt DateTime?
 }
 
+model SystemConfiguration {
+  id Int @id @default(autoincrement())
+  activeProfessors String
+  preRequisites String
+  minCredits Int
+  minPeriods Int
+  reminderTemplate String
+  reminderDaysBefore Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum Role {
   STUDENT
   TEACHER

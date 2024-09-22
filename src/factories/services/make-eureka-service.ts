@@ -1,5 +1,5 @@
-import { EurekaService } from '@/external/EurekaService';
+import { EurecaService } from '@/external/EurecaService';
 
-export const makeEurekaService = (): EurekaService => {
-  return new EurekaService();
+export const makeEurekaService = (): EurecaService => {
+  return new EurecaService();
 };

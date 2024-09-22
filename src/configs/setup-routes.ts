@@ -1,4 +1,8 @@
 import { adaptValidator } from '@/adapters/express-validator-adapter';
+import { makeGetSystemConfigController } from '@/factories/controllers/config/make-get-system-config-controller';
+import { makeUpdateSystemConfigController } from '@/factories/controllers/config/make-update-system-config-controller';
+import { makeGetSubjectsController } from '@/factories/controllers/dashboard/make-get-subjects-controller';
+import { makeGetTeachersController } from '@/factories/controllers/dashboard/make-get-teachers-controller';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
 import { makeCreateApprovalController } from '@/factories/controllers/make-create-approval-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
@@ -69,6 +73,10 @@ export function setupRoutes(app: Express): void {
   listPendingApprovalsRoute(router);
   getProfessorBiDataRoute(router);
   healthCheckRoute(router);
+  getTeachersRoute(router);
+  getSubjectsRoute(router);
+  updateSystemConfigRoute(router);
+  getSystemConfigRoute(router);
 }
 
 function healthCheckRoute(router: Router) {
@@ -211,4 +219,20 @@ function listPendingApprovalsRoute(router: Router) {
 
 function getProfessorBiDataRoute(router: Router) {
   router.get('/dashboard/professor/:id', adaptRoute(makeGetProfessorBiDataController()));
+}
+
+function getTeachersRoute(router: Router) {
+  router.get('/dashboard/teachers', adaptRoute(makeGetTeachersController()));
+}
+
+function getSubjectsRoute(router: Router) {
+  router.get('/dashboard/subjects', adaptRoute(makeGetSubjectsController()));
+}
+
+function updateSystemConfigRoute(router: Router) {
+  router.put('/config', adaptRoute(makeUpdateSystemConfigController()));
+}
+
+function getSystemConfigRoute(router: Router) {
+  router.get('/config', adaptRoute(makeGetSystemConfigController()));
 }

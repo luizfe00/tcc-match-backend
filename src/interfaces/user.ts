@@ -8,4 +8,5 @@ export interface UserSignIn {
   enrollment: string;
   orienteePaper?: Paper;
   role: Role;
+  eurecaToken?: string;
 }

@@ -17,3 +17,7 @@ export type EurekaGetTeacherRequest = (
   token: string,
   anonymize?: boolean
 ) => Promise<GetTeacherResponse>;
+export type EurekaGetTeachersRequest = (
+  academicUnitCode: string,
+  token: string
+) => Promise<GetTeacherResponse[]>;
