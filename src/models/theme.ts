@@ -12,7 +12,7 @@ export interface Theme {
   duration: number;
   paper?: Partial<Paper>;
   interests?: Interest[];
-  categories?: Category[];
+  categories?: Partial<Category>[];
   owner?: Partial<User>;
   createdAt?: Date;
   updatedAt?: Date;

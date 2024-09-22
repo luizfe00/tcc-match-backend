@@ -2,6 +2,7 @@ import { Theme } from '@/models/theme';
 import { ThemeRepository } from '@/usecases/ports/theme-repository';
 import prismaClient from './prisma-client';
 import { Role } from '@prisma/client';
+import { addDays } from 'date-fns';
 
 export class PrismaThemeRepository implements ThemeRepository {
   async add(theme: Theme): Promise<Theme> {
@@ -155,15 +156,23 @@ export class PrismaThemeRepository implements ThemeRepository {
   }
 
   async findAll(): Promise<Theme[]> {
-    return await prismaClient.theme.findMany({
-      orderBy: [
-        {
-          deletedAt: 'asc',
+    const prisma = prismaClient.$extends({
+      result: {
+        theme: {
+          endDate: {
+            needs: {
+              startDate: true,
+              duration: true,
+            },
+            compute: (theme) => {
+              return addDays(theme.startDate, theme.duration);
+            },
+          },
         },
-        {
-          createdAt: 'desc',
-        },
-      ],
+      },
+    });
+
+    const themes = await prisma.theme.findMany({
       include: {
         owner: {
           select: {
@@ -179,7 +188,17 @@ export class PrismaThemeRepository implements ThemeRepository {
             type: true,
           },
         },
+        categories: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
+    });
+
+    return themes.sort((a, b) => {
+      return a.endDate.getTime() - b.endDate.getTime();
     });
   }
 }

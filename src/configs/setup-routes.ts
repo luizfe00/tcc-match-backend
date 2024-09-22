@@ -3,6 +3,7 @@ import { makeGetSystemConfigController } from '@/factories/controllers/config/ma
 import { makeUpdateSystemConfigController } from '@/factories/controllers/config/make-update-system-config-controller';
 import { makeGetSubjectsController } from '@/factories/controllers/dashboard/make-get-subjects-controller';
 import { makeGetTeachersController } from '@/factories/controllers/dashboard/make-get-teachers-controller';
+import { makeSendEmailController } from '@/factories/controllers/emailSender/make-send-email-controller';
 import { makeApproveInterestController } from '@/factories/controllers/make-approve-interest-controller';
 import { makeCreateApprovalController } from '@/factories/controllers/make-create-approval-controller';
 import { makeCreateInterestController } from '@/factories/controllers/make-create-interest-controller';
@@ -31,6 +32,7 @@ import { makeSignInController } from '@/factories/controllers/make-signin-contro
 import { makeUpdateApprovalController } from '@/factories/controllers/make-update-approval-controller';
 import { makeUpdatePaperController } from '@/factories/controllers/make-update-paper-controller';
 import { makeUpdateStageController } from '@/factories/controllers/make-update-stage-controller';
+import { makeGetAllStudentsController } from '@/factories/controllers/students/make-get-all-students-controller';
 import { makeApproveInterestValidator } from '@/factories/validators/make-approve-interest-validation';
 import { makeCreateApprovalValidator } from '@/factories/validators/make-create-approval-validator';
 import { makeCreateInterestValidator } from '@/factories/validators/make-create-interest-validator';
@@ -77,6 +79,8 @@ export function setupRoutes(app: Express): void {
   getSubjectsRoute(router);
   updateSystemConfigRoute(router);
   getSystemConfigRoute(router);
+  sendEmailRoute(router);
+  listAllStudentsRoute(router);
 }
 
 function healthCheckRoute(router: Router) {
@@ -235,4 +239,12 @@ function updateSystemConfigRoute(router: Router) {
 
 function getSystemConfigRoute(router: Router) {
   router.get('/config', adaptRoute(makeGetSystemConfigController()));
+}
+
+function sendEmailRoute(router: Router) {
+  router.post('/email', adaptRoute(makeSendEmailController()));
+}
+
+function listAllStudentsRoute(router: Router) {
+  router.get('/dashboard/students', adaptRoute(makeGetAllStudentsController()));
 }

@@ -1,6 +1,7 @@
 import { PaperPayload, Paper } from '@/models/paper';
 import { PaperRepository } from '@/usecases/ports/paper-repository';
 import prismaClient from './prisma-client';
+import { addDays } from 'date-fns';
 
 export class PrismaPaperRepository implements PaperRepository {
   async add(paper: PaperPayload): Promise<Paper> {
@@ -82,15 +83,23 @@ export class PrismaPaperRepository implements PaperRepository {
   }
 
   async findAll(): Promise<Paper[]> {
-    return await prismaClient.paper.findMany({
-      orderBy: [
-        {
-          deletedAt: 'asc',
+    const prisma = prismaClient.$extends({
+      result: {
+        theme: {
+          endDate: {
+            needs: {
+              startDate: true,
+              duration: true,
+            },
+            compute: (theme) => {
+              return addDays(theme.startDate, theme.duration);
+            },
+          },
         },
-        {
-          createdAt: 'desc',
-        },
-      ],
+      },
+    });
+
+    const papers = await prisma.paper.findMany({
       include: {
         advisor: {
           select: {
@@ -114,6 +123,7 @@ export class PrismaPaperRepository implements PaperRepository {
             summary: true,
             duration: true,
             startDate: true,
+            endDate: true,
             owner: {
               select: {
                 id: true,
@@ -124,6 +134,10 @@ export class PrismaPaperRepository implements PaperRepository {
           },
         },
       },
+    });
+
+    return papers.sort((a, b) => {
+      return a.theme.endDate.getTime() - b.theme.endDate.getTime();
     });
   }
 }

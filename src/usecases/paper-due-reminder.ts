@@ -23,9 +23,7 @@ export class PaperDueReminder {
       return isWithinInterval(dueDate, { start: now, end: sevenDaysFromNow });
     });
 
-    console.log({ duePapers });
     for (const paper of duePapers) {
-      console.log(paper);
       await this.sendReminderEmail(paper);
     }
   }

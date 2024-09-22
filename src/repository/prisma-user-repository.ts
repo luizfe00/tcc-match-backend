@@ -68,6 +68,11 @@ export class PrismaUserRepository implements UserRepository {
       where: {
         role: Role.STUDENT,
       },
+      include: {
+        orienteePaper: true,
+        interests: true,
+        themes: true,
+      },
     });
   }
 
