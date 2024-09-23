@@ -1,15 +1,21 @@
 services:
   dev-db:
+    container_name: database_container
     image: postgres:latest
+    restart: always
     ports:
       - 2345:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
   server:
+    container_name: server_container
+    restart: always
     build: .
     ports:
       - "5000:5000"
+    depends_on:
+      - dev-db
     environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/mydb?schema=public"
+      DATABASE_URL: ${DATABASE_URL}

@@ -9,7 +9,9 @@
     "dev": "nodemon --config nodemon.json src/server.ts",
     "db-migrate-dev": "prisma migrate dev",
     "start-dev": "prisma migrate dev && nodemon --watch src/ --exec ts-node src/server.ts -e ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "NODE_ENV=test && cypress open",
+    "cypress:run": "cypress run"
   },
   "keywords": [],
   "author": "Luiz Felipe Xavier Farias",
