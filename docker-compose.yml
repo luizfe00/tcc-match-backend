@@ -4,11 +4,12 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - 2345:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+
   server:
     container_name: server_container
     restart: always
@@ -19,3 +20,10 @@ services:
       - dev-db
     environment:
       DATABASE_URL: ${DATABASE_URL}
+
+  migration:
+    container_name: migrator
+    build: .
+    depends_on: 
+      - dev-db
+    command: sh -c '/usr/local/bin/wait-for-it.sh dev-db:5432 -- npx prisma migrate dev'
