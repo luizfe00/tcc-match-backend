@@ -7,7 +7,7 @@ export function cors(req: Request, res: Response, next: NextFunction): void {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
-  // res.set('Access-Control-Allow-Credentials', 'true');
+  res.set('Access-Control-Allow-Credentials', 'true');
 
   // Handle preflight (OPTIONS) requests
   if (req.method === 'OPTIONS') {
