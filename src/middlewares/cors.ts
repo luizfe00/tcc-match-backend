@@ -9,6 +9,7 @@ const allowedOrigins = [
 export function cors(req: Request, res: Response, next: NextFunction): void {
   const origin = req.headers.origin as string;
   console.log(origin)
+  console.log(req)
 
   if (allowedOrigins.includes(origin)) {
     res.set('Access-Control-Allow-Origin', origin);
@@ -17,7 +18,7 @@ export function cors(req: Request, res: Response, next: NextFunction): void {
   res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.set(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, ngrok-skip-browser-warning', 
   );
   res.set('Access-Control-Allow-Credentials', 'true');
 
