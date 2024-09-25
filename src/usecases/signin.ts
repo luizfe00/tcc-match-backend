@@ -31,6 +31,7 @@ export class SignIn implements UseCase {
   async perform({ username, password }: { username: string; password: string }): SignInResponse {
     const token = await this.authenticateWithEureka(username, password);
     const profile = await this.eurecaService.profile(token);
+
     const userData = this.createUserData(profile);
     const user = await this.findOrCreateUser(userData);
     return this.generateSignInResponse(user, token);
