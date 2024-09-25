@@ -8,11 +8,13 @@ const allowedOrigins = [
 export function cors(req: Request, res: Response, next: NextFunction): void {
   const origin = req.headers.origin;
 
+  console.log('origin', origin)
+
   // Check if the request's origin is allowed
   if (origin && allowedOrigins.includes(origin)) {
     res.set('Access-Control-Allow-Origin', origin); // Dynamically set the allowed origin
   }
-  
+
   res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.set(
     'Access-Control-Allow-Headers',
