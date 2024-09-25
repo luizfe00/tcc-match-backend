@@ -45,8 +45,9 @@ export class SignIn implements UseCase {
 
   private createUserData(profile: EurecaProfile): CreateUser {
     return {
-      email: profile.attributes.email,
-      enrollment: profile.attributes.code,
+      // email: profile.attributes.email,
+      email: profile.name.replace(/ /g,'')+"@ccc.ufcg.edu.br",
+      enrollment: profile.id,
       name: profile.name,
       role: this.getUserRole(profile),
     };
