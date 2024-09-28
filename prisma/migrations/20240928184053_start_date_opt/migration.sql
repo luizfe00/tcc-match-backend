@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Theme" ALTER COLUMN "startDate" DROP NOT NULL,
+ALTER COLUMN "startDate" DROP DEFAULT;

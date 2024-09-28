@@ -25,10 +25,16 @@ export class PrismaThemeRepository implements ThemeRepository {
   }
 
   async softDelete(id: string): Promise<void> {
+    const theme = await prismaClient.theme.findUnique({
+      where: { id },
+      select: { startDate: true },
+    });
+
     await prismaClient.theme.update({
       where: { id },
       data: {
-        deletedAt: new Date(),
+        deletedAt: new Date(), // Mark the theme as deleted with the current date and time
+        startDate: theme.startDate ? undefined : new Date(), // Update startDate only if it is null
       },
     });
   }

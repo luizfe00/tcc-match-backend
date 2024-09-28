@@ -37,7 +37,7 @@ model Theme {
   label String @unique
   summary String
   ownerId String
-  startDate DateTime @default(now())
+  startDate DateTime?
   duration Int
 
   paper Paper?
