@@ -42,6 +42,7 @@ export class EurecaService implements EurekaASService, EurekaDASService {
 
   public profile: EurekaProfileRequest = async (token) => {
     this.eurekaAxiosInstance.defaults.headers['Authentication-Token'] = token;
+    this.eurekaAxiosInstance.defaults.headers['token-De-Autenticacao'] = token;
     const { data } = await this.eurekaAxiosInstance.get<ProfileResponse>(
       `${this.EurecaUrl}/${this.ASUrl}/profile`
     );
