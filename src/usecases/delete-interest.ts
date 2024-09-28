@@ -19,7 +19,7 @@ export class DeleteInterest implements UseCase {
     const theme = await this.themeRepository.findById(interest.themeId);
     const interestBelongsToUser = interest.ownerId === user.id;
     const themeBelongsToUser = theme.ownerId === user.id;
-    if (!interestBelongsToUser || !themeBelongsToUser) {
+    if (!interestBelongsToUser && !themeBelongsToUser) {
       throw new BadRequestError('Action not allowed for user');
     }
     await this.interestRepository.delete(id);

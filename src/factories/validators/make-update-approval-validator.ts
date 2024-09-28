@@ -7,6 +7,7 @@ export const makeUpdateApprovalValidator = (): Validator => {
   const joiSchema = Joi.object<Approval>({
     response: Joi.string().optional(),
     approval: Joi.boolean().optional(),
+    paperId: Joi.string().required(),
   });
 
   return new PayloadValidation(joiSchema);
