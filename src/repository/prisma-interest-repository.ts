@@ -2,9 +2,18 @@ import { CreateInterestPayload, Interest } from '@/models/interest';
 import { InterestRepository } from '@/usecases/ports/interest-repository';
 import prismaClient from './prisma-client';
 import { UserSignIn } from '@/interfaces/user';
-import { InterestBI } from '@/interfaces/BI';
+import { Paper, PaperPayload } from '@/models/paper';
+import { User } from '@/models/user';
+import { PaperRepository } from '@/usecases/ports/paper-repository';
+import { ThemeRepository } from '@/usecases/ports/theme-repository';
+import { Role } from '@prisma/client';
 
 export class PrismaInterestRepository implements InterestRepository {
+  constructor(
+    private readonly paperRepository: PaperRepository,
+    private readonly themeRepository: ThemeRepository
+  ) {}
+
   async add(interest: CreateInterestPayload): Promise<Interest> {
     return await prismaClient.interest.create({
       data: {
@@ -26,15 +35,15 @@ export class PrismaInterestRepository implements InterestRepository {
       },
     });
   }
-
-  async approve(interestId: string): Promise<void> {
-    await prismaClient.interest.update({
-      where: {
-        id: interestId,
-      },
-      data: {
-        approved: true,
-      },
+  async approve(ptcc: PaperPayload, user?: User): Promise<Paper> {
+    return await prismaClient.$transaction(async () => {
+      const paper = await this.paperRepository.add(ptcc);
+      if (user?.role === Role.STUDENT) {
+        await this.deleteAllByUserId(ptcc.studentId);
+      }
+      await this.themeRepository.softDelete(ptcc.themeId);
+      await this.deleteAllByThemeId(ptcc.themeId);
+      return paper;
     });
   }
 

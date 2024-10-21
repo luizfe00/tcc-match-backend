@@ -5,7 +5,8 @@ import { Approval } from './approval';
 
 export interface Paper {
   id?: string;
-  documentUrl?: string;
+  ptccDocumentUrl?: string;
+  tccDocumentUrl?: string;
   type: PaperType;
   status: PaperStatus;
   studentId?: string;
@@ -20,15 +21,17 @@ export interface Paper {
 }
 
 export interface PaperPayload {
-  documentUrl?: string;
   approved: boolean;
   studentId: string;
   themeId: string;
   professorId: string;
   interestId: string;
+  ptccDocumentUrl?: string;
+  tccDocumentUrl?: string;
 }
 
 export interface EditPaperPayload {
   id?: string;
-  documentUrl?: string;
+  ptccDocumentUrl?: string;
+  tccDocumentUrl?: string;
 }

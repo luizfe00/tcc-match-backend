@@ -4,6 +4,7 @@ import { UseCase } from './ports/use-case';
 import { PaperRepository } from './ports/paper-repository';
 import { UserSignIn } from '@/interfaces/user';
 import { BadRequestError, ExistingEntityError, NotFoundError } from './errors';
+import { Paper } from '@/models/paper';
 
 export class CreateApproval implements UseCase {
   constructor(
@@ -30,16 +31,29 @@ export class CreateApproval implements UseCase {
 
     if (existingApproval) throw new ExistingEntityError('Approval', 'id', existingApproval.id);
 
-    const approvalPayload = {
+    const approvalPayload: Approval = {
       ...approval,
       type: paper.type,
+      status: approval?.approval ? 'APPROVED' : 'REJECTED',
     };
 
     const createdApproval = await this.approvalRepository.add(approvalPayload);
-    await this.paperRepository.update({
-      ...paper,
-      status: 'PENDING',
-    });
+    await this.updatePaper(paper, createdApproval);
     return createdApproval;
+  }
+
+  private async updatePaper(paper: Partial<Paper>, approval: Approval) {
+    console.log({ approval, paper });
+    if (approval.type === 'PTCC' && approval.status === 'APPROVED') {
+      await this.paperRepository.update({ ...paper, type: 'TCC', status: 'ONGOING' });
+    } else if (approval.type === 'TCC' && approval.status === 'APPROVED') {
+      await this.paperRepository.update({ ...paper, status: 'COMPLETED' });
+    } else if (approval.type === 'PTCC' && approval.status === 'REJECTED') {
+      await this.paperRepository.update({ ...paper, status: 'REJECTED' });
+    } else if (approval.type === 'TCC' && approval.status === 'REJECTED') {
+      await this.paperRepository.update({ ...paper, status: 'REJECTED' });
+    } else {
+      await this.paperRepository.update({ ...paper, status: 'PENDING' });
+    }
   }
 }

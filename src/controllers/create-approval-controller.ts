@@ -14,6 +14,7 @@ export class CreateApprovalController implements Controller {
         statusCode: StatusCodes.CREATED,
       };
     } catch (error) {
+      console.log({ error });
       const entityNotFound = error.constructor.name === RequestErrorNames.NOT_FOUND;
       const badRequest = error.constructor.name === RequestErrorNames.BAD_REQUEST;
 

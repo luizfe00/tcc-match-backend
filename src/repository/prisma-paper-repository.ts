@@ -5,25 +5,42 @@ import { addDays } from 'date-fns';
 
 export class PrismaPaperRepository implements PaperRepository {
   async add(paper: PaperPayload): Promise<Paper> {
-    return await prismaClient.paper.create({
-      data: {
-        ptccDocumentUrl: paper?.documentUrl,
-        theme: {
-          connect: {
-            id: paper.themeId,
+    return await prismaClient.$transaction(async (prisma) => {
+      const paperInstance = await prisma.paper.create({
+        data: {
+          advisor: {
+            connect: {
+              id: paper.professorId,
+            },
+          },
+          orientee: {
+            connect: {
+              id: paper.studentId,
+            },
+          },
+          theme: {
+            connect: {
+              id: paper.themeId,
+            },
           },
         },
-        orientee: {
-          connect: {
-            id: paper.studentId,
+        include: {
+          orientee: true,
+        },
+      });
+      await prisma.user.update({
+        where: {
+          id: paper.studentId,
+        },
+        data: {
+          orienteePaper: {
+            connect: {
+              id: paperInstance.id,
+            },
           },
         },
-        advisor: {
-          connect: {
-            id: paper.professorId,
-          },
-        },
-      },
+      });
+      return paperInstance;
     });
   }
 
@@ -32,10 +49,15 @@ export class PrismaPaperRepository implements PaperRepository {
       where: {
         id: paper.id,
       },
-      data:
-        paper.type === 'PTCC'
-          ? { ptccDocumentUrl: paper.documentUrl }
-          : { tccDocumentUrl: paper.documentUrl },
+      data: {
+        type: paper?.type,
+        status: paper?.status,
+        approvals: {
+          connect: paper?.approvals?.map((approval) => ({ id: approval.id })),
+        },
+        ptccDocumentUrl: paper?.ptccDocumentUrl,
+        tccDocumentUrl: paper?.tccDocumentUrl,
+      },
     });
   }
 

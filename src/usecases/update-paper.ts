@@ -19,6 +19,6 @@ export class UpdatePaper implements UseCase {
       throw new BadRequestError('User is not part of this paper');
     }
 
-    await this.paperRepository.update(paper);
+    await this.paperRepository.update({ ...paper, type: paperFound.type });
   }
 }

@@ -40,6 +40,7 @@ export class PrismaThemeRepository implements ThemeRepository {
   }
 
   async delete(id: string): Promise<void> {
+    console.log({ id });
     await prismaClient.theme.delete({
       where: {
         id,

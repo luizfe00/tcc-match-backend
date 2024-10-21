@@ -5,7 +5,6 @@ import { PaperPayload } from '@/models/paper';
 
 export const makeApproveInterestValidator = (): Validator => {
   const joiSchema = Joi.object<PaperPayload>({
-    documentUrl: Joi.string().default(''),
     professorId: Joi.string().uuid().required(),
     studentId: Joi.string().uuid().required(),
     themeId: Joi.string().uuid().required(),

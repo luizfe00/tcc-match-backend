@@ -38,13 +38,11 @@ export class ApproveInterest implements UseCase {
       throw new NotFoundError('Student', ptcc.studentId);
     }
 
-    await this.interestRepository.approve(ptcc.interestId);
-    await this.themeRepository.softDelete(ptcc.themeId);
-    if (user.role === Role.STUDENT) {
-      await this.interestRepository.deleteAllByThemeId(student.themes?.[0]?.id);
-      await this.interestRepository.deleteAllByUserId(student.id);
-      await this.themeRepository.delete(student?.themes?.[0]?.id);
+    try {
+      const response = await this.interestRepository.approve(ptcc, user);
+      return response;
+    } catch (error) {
+      throw new BadRequestError('Error approving interest');
     }
-    return await this.paperRepository.add(ptcc);
   }
 }

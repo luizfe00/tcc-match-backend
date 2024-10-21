@@ -12,6 +12,8 @@ export class PrismaApprovalRepository implements ApprovalRepository {
           },
         },
         type: approval.type,
+        status: approval.status,
+        approval: approval.approval,
       },
     });
   }
