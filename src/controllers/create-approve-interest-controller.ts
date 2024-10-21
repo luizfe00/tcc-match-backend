@@ -9,11 +9,13 @@ export class ApproveInterestController implements Controller {
   async handle(HttpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const ptcc = await this.useCase.perform(HttpRequest.body, HttpRequest.user);
+      console.log({ ptcc });
       return {
         body: ptcc,
         statusCode: StatusCodes.CREATED,
       };
     } catch (error) {
+      console.log({ error });
       const NotFoundError = error.constructor.name === RequestErrorNames.NOT_FOUND;
       const BadRequestError = error.constructor.name === RequestErrorNames.BAD_REQUEST;
       const ExistingEntityError = error.constructor.name === RequestErrorNames.EXISTING_ENTITY;

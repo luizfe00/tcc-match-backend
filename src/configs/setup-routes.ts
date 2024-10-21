@@ -39,6 +39,7 @@ import { makeCreateInterestValidator } from '@/factories/validators/make-create-
 import { makeCreateStageValidator } from '@/factories/validators/make-create-stage-validator';
 import { makeCreateThemeValidator } from '@/factories/validators/make-create-theme-validator';
 import { makeUpdateApprovalValidator } from '@/factories/validators/make-update-approval-validator';
+import { makeUpdatePaperValidator } from '@/factories/validators/make-update-paper-validator';
 import { adaptRoute } from '@adapters/express-route-adapter';
 import { Router, Express } from 'express';
 
@@ -210,7 +211,11 @@ function listAllPapersRoute(router: Router) {
 }
 
 function updatePaperRoute(router: Router) {
-  router.put('/paper/:id', adaptRoute(makeUpdatePaperController()));
+  router.put(
+    '/paper/:id',
+    adaptValidator(makeUpdatePaperValidator()),
+    adaptRoute(makeUpdatePaperController())
+  );
 }
 
 function listDeletedThemesRoute(router: Router) {
